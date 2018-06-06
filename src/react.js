@@ -1,47 +1,40 @@
 (() => {
-  function anElement(element, children) {
-    if (typeof element === 'function') {
-        return element();
+    function createElement(el, props, ...children) {
+        return anElement(el, children);
     }
-    else {
+
+    function anElement(element, children) {
+        if (isClass(element)) {
+            const instance = new element();
+            return instance.render();
+        }
+        else if (isFunc(element)) {
+            return element();
+        }
+        else {
+            return handleDOM(element, children);
+        }
+    }
+
+    function handleDOM(element, children) {
         const anElement = document.createElement(element);
-        anElement.innerHTML = children.join(' ');
+        children.map((c) => {
+            if(typeof(c) === 'object'){
+                anElement.appendChild(c);
+            }
+            else {
+                anElement.innerHTML += c;
+            }
+        });
         return anElement;
     }
-  }
 
-  function createElement(el, props, ...children) {
-    return anElement(el, children);
-  }
-
-  window.React = {
-    createElement
-  };
-  window.ReactDOM = {
-    render: (el, domEl) => {
-      domEl.appendChild(el);
-    }
-  };
+    window.React = {
+        createElement
+    };
+    window.ReactDOM = {
+        render: (el, domEl) => {
+            domEl.appendChild(el);
+        }
+    };
 })();
-
-
-// const Hello = function () {
-//     return React.createElement('div', null, `Hello World`);
-// };
-// const helloWorld = React.createElement(Hello, null, null);
-// const helloWorld2 = React.createElement(Hello, null, null);
-// const regularDiv = React.createElement('div', null, `I'm just a regular div`);
-//
-// const parent = React.createElement('div', null,
-//         helloWorld,
-//         helloWorld2,
-//         regularDiv,
-//         ` I'm just a text`
-// );
-// // We expect to see:
-// // -----------------
-// // Hello World
-// // Hello World
-// // I'm just a regular div
-// // I'm just a text
-// ReactDOM.render(parent, document.getElementById('root'));

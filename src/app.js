@@ -25,4 +25,17 @@ const parent = React.createElement('div', null,
 // Hello World
 // I'm just a regular div
 // I'm just a text
+
+
+
+
+
+// class Hello {
+//     render() {
+//         return React.createElement('div', null, `hello again!`);
+//     }
+// }
+//
+// const helloWorld = React.createElement(Hello, null, null);
+//
 ReactDOM.render(parent, document.getElementById('root'));
