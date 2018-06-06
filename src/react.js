@@ -1,31 +1,37 @@
 (() => {
     function createElement(el, props, ...children) {
-        return anElement(el, children);
+        return anElement(el, props, children);
     }
 
-    function anElement(element, children) {
+    function anElement(element, props, children) {
         if (isClass(element)) {
             const instance = new element();
             return instance.render();
         }
         else if (isFunc(element)) {
-            return element();
+            console.log('aaa');
+            return element(props);
         }
         else {
-            return handleDOM(element, children);
+            console.log('bbb');
+            return handleDOM(element, props, children);
         }
     }
 
-    function handleDOM(element, children) {
+    function handleDOM(element, props, children) {
         const anElement = document.createElement(element);
-        children.map((c) => {
-            if(typeof(c) === 'object'){
-                anElement.appendChild(c);
-            }
-            else {
-                anElement.innerHTML += c;
-            }
-        });
+
+        if ( children !== null ) {
+            children.map((c) => {
+                if(typeof(c) === 'object'){
+                    anElement.appendChild(c);
+                }
+                else {
+                    anElement.innerHTML += c;
+                }
+            });
+        }
+
         return anElement;
     }
 
