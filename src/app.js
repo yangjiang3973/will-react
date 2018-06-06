@@ -1,13 +1,13 @@
-const Hello = ({name}) => {
-    return React.createElement('div', null, `hello, ${name}`);
-};
+// const Hello = ({name}) => {
+//     return React.createElement('div', null, `hello, ${name}`);
+// };
 
 // const Hello = ({name}) => {
 //     return <div>hello, {name}</div>
 // }
 
 {/* <Hello name='yang'></Hello> */}
-const helloWorld = React.createElement(Hello, {name: 'Yang'}, null);
+// const helloWorld = React.createElement(Hello, {name: 'Yang'}, null);
 
 
 
@@ -32,15 +32,16 @@ const helloWorld = React.createElement(Hello, {name: 'Yang'}, null);
 // I'm just a text
 
 
+class Hello extends React.Component{
+    constructor(props) {
+        super(props);
+    }
 
+    render() {
+        return React.createElement('div', null, `hello again! ${this.props.name}`);
+    }
+}
 
+const helloWorld = React.createElement(Hello, {name: 'yang'}, null);
 
-// class Hello {
-//     render() {
-//         return React.createElement('div', null, `hello again!`);
-//     }
-// }
-//
-// const helloWorld = React.createElement(Hello, null, null);
-//
 ReactDOM.render(helloWorld, document.getElementById('root'));
