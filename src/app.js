@@ -32,16 +32,30 @@
 // I'm just a text
 
 
-class Hello extends React.Component{
-    constructor(props) {
-        super(props);
-    }
+// class Hello extends React.Component{
+//     constructor(props) {
+//         super(props); // calls the parent constructor.
+//     }
+//
+//     render() {
+//         return React.createElement('div', null, `hello again! ${this.props.name}`);
+//     }
+// }
+//
+// const helloWorld = React.createElement(Hello, {name: 'yang'}, null);
 
-    render() {
-        return React.createElement('div', null, `hello again! ${this.props.name}`);
-    }
+
+class MyButton extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return React.createElement('button', {onClick: this.props.onClick}, `Click me`);
+  }
 }
+const myBtn = React.createElement(MyButton, {onClick: () => alert('yay it worked')}, null);
+ReactDOM.render(myBtn, document.getElementById('root'));
 
-const helloWorld = React.createElement(Hello, {name: 'yang'}, null);
-
-ReactDOM.render(helloWorld, document.getElementById('root'));
+// ReactDOM.render(helloWorld, document.getElementById('root'));

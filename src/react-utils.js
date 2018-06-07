@@ -8,3 +8,7 @@ function isFunc(func) {
     return typeof func === 'function'
         && !isClass(func);
 }
+
+function isEvent(name) {
+    return name.substring(0, 2) === 'on' ? true : false;
+}

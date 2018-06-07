@@ -5,38 +5,60 @@
 
     function anElement(element, props, children) {
         if (isClass(element)) {
-            const instance = new element();
+            const instance = new element(props);
             return instance.render();
         }
         else if (isFunc(element)) {
-            console.log('aaa');
             return element(props);
         }
         else {
-            console.log('bbb');
-            return handleDOM(element, props, children);
+            return handleDOMNode(element, props, children);
         }
     }
 
-    function handleDOM(element, props, children) {
+    function handleDOMNode(element, props, children) {
         const anElement = document.createElement(element);
 
         if ( children !== null ) {
             children.map((c) => {
-                if(typeof(c) === 'object'){
-                    anElement.appendChild(c);
-                }
-                else {
-                    anElement.innerHTML += c;
-                }
+                appendChild(anElement, c);
             });
         }
-
+        // add event listeners or attributes from props
+        for (let propName in props) {
+            appendProp(anElement, propName, props[propName]);
+        }
         return anElement;
     }
 
+    function appendChild(element, child) {
+        if(typeof(child) === 'object'){
+            element.appendChild(child);
+        }
+        else {
+            element.innerHTML += child;
+        }
+    }
+
+    function appendProp(element, propName, propVal) {
+        if (isEvent(propName)) {
+            console.log(propName);
+            element.addEventListener(propName.substring(2).toLowerCase(), propVal);
+        }
+        else {
+            element.setAttribute(propName, propVal);
+        }
+    }
+
+    class Component {
+        constructor(props) {
+            this.props = props;
+        }
+    }
+
     window.React = {
-        createElement
+        createElement,
+        Component
     };
     window.ReactDOM = {
         render: (el, domEl) => {
