@@ -45,17 +45,43 @@
 // const helloWorld = React.createElement(Hello, {name: 'yang'}, null);
 
 
-class MyButton extends React.Component {
+// class MyButton extends React.Component {
+//
+//   constructor(props) {
+//     super(props);
+//   }
+//
+//   render() {
+//     return React.createElement('button', {onClick: this.props.onClick}, `Click me`);
+//   }
+// }
+// const myBtn = React.createElement(MyButton, {onClick: () => alert('yay it worked')}, null);
+// ReactDOM.render(myBtn, document.getElementById('root'));
 
-  constructor(props) {
-    super(props);
-  }
 
-  render() {
-    return React.createElement('button', {onClick: this.props.onClick}, `Click me`);
-  }
+class Counter extends React.Component {
+     constructor(props) {
+         super(props);
+         this.state = {value: 0};
+     }
+
+     onPlusClick() {
+         this.setState({value: this.state.value + 1});
+     }
+
+     onMinusClick() {
+         this.setState({value: this.state.value - 1});
+     }
+
+     render() {
+         return React.createElement('div', null,
+            React.createElement('div', null, 'A Counter'),
+            React.createElement('div', null, {this.state.value}),
+            React.createElement('button', {onClick: this.onPlusClick.bind(this)}, '+'),
+            React.createElement('button', {onClick: this.onMinusClick.bind(this)}, '-')
+        );
+     }
 }
-const myBtn = React.createElement(MyButton, {onClick: () => alert('yay it worked')}, null);
-ReactDOM.render(myBtn, document.getElementById('root'));
 
-// ReactDOM.render(helloWorld, document.getElementById('root'));
+const counter = React.createElement(Counter, null, null);
+ReactDOM.render(counter, document.getElementById('root'));
