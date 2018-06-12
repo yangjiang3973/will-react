@@ -24,6 +24,8 @@
 //         regularDiv,
 //         ` I'm just a text`
 // );
+// ReactDOM.render(parent, document.getElementById('root'));
+
 // We expect to see:
 // -----------------
 // Hello World
@@ -59,6 +61,8 @@
 // ReactDOM.render(myBtn, document.getElementById('root'));
 
 
+
+
 class Counter extends React.Component {
      constructor(props) {
          super(props);
@@ -82,6 +86,10 @@ class Counter extends React.Component {
         );
      }
 }
+
+// const counter = React.createElement(Counter, null, null);
+// const counterWrapper = React.createElement('div', null, counter);
+// ReactDOM.render(counterWrapper, document.getElementById('root'));
 
 const counter = React.createElement(Counter, null, null);
 ReactDOM.render(counter, document.getElementById('root'));
