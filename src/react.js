@@ -2,6 +2,9 @@
     let rootDOMElement, rootReactElement;
     const REACT_CLASS = 'REACT_CLASS';
 
+    let classCounter = 0;
+    const classMap = {};
+
     function createElement(el, props, ...children) {
         return anElement(el, props, children);
     }
@@ -19,11 +22,17 @@
     }
 
     function handleClass(clazz, props, children) {
-        const ReactElem = new clazz(props);
-        ReactElem.children = children;
-        ReactElem.type = REACT_CLASS;
+        classCounter ++;
+        if(classMap[classCounter]) {
+            return classMap[classCounter];
+        }
+
+        const reactElem = new clazz(props);
+        reactElem.children = children;
+        reactElem.type = REACT_CLASS;
+        classMap[classCounter] = reactElem;
         // NOTE: return the obj instead of calling render() here
-        return ReactElem;
+        return reactElem;
     }
 
     function handleDOMNode(element, props, children) {
@@ -43,9 +52,11 @@
 
     function appendChild(element, child) {
         if (child.type === 'REACT_CLASS') {
+            console.log('bbbb');
             appendChild(element, child.render());
         }
         else if(Array.isArray(child)) {
+            console.log('aaaa');
             child.map(ch => {element.appendChild(ch)});
         }
         else if(typeof(child) === 'object'){
@@ -81,6 +92,7 @@
             rootDOMElement.removeChild(rootDOMElement.lastChild);
         }
         // render again
+        classCounter = 1; // skip the root
         ReactDOM.render(rootReactElement, rootDOMElement);
     }
 
