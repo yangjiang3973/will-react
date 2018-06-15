@@ -87,9 +87,21 @@ class Counter extends React.Component {
      }
 }
 
+// TODO: Need to keep old class's state. Otherwise reReder will create instances again, then nothing change on web page.
+// use a hashMap to store all instances. when reRender(), find instances(will not lose states).
+// key is the order of instance in the tree, value is its instance.
+class Root extends React.Component {
+    render() {
+        console.log('aaaaa');
+        return React.createElement('div', null,
+            React.createElement(Counter, null, null),
+            React.createElement(Counter, null, null));
+    }
+}
+
 // const counter = React.createElement(Counter, null, null);
 // const counterWrapper = React.createElement('div', null, counter);
 // ReactDOM.render(counterWrapper, document.getElementById('root'));
 
-const counter = React.createElement(Counter, null, null);
-ReactDOM.render(counter, document.getElementById('root'));
+const wrapCounter = React.createElement(Root, null, null);
+ReactDOM.render(wrapCounter, document.getElementById('root'));
