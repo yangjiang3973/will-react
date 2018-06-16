@@ -52,11 +52,9 @@
 
     function appendChild(element, child) {
         if (child.type === 'REACT_CLASS') {
-            console.log('bbbb');
             appendChild(element, child.render());
         }
         else if(Array.isArray(child)) {
-            console.log('aaaa');
             child.map(ch => {element.appendChild(ch)});
         }
         else if(typeof(child) === 'object'){
@@ -70,6 +68,10 @@
     function appendProp(element, propName, propVal) {
         if (isEvent(propName)) {
             element.addEventListener(propName.substring(2).toLowerCase(), propVal);
+        }
+        else if (isClassName(propName)) {
+            propName = 'class';
+            element.setAttribute(propName, propVal);
         }
         else {
             element.setAttribute(propName, propVal);
