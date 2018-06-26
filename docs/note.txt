@@ -5,3 +5,5 @@ https://zhuanlan.zhihu.com/p/30073543
 能干的周边都干了，在不碰virtualDOM的前提下。
 
 现在需要开始实现virtualDOM了。
+
+深度剖析：如何实现一个 Virtual DOM 算法: https://github.com/livoras/blog/issues/13
