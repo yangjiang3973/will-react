@@ -1,0 +1,7 @@
+NOTE: 1. 经常回顾下关于React的教程，熟悉用法，多看几遍。
+https://zhuanlan.zhihu.com/p/30073543
+
+2018-06-25:
+能干的周边都干了，在不碰virtualDOM的前提下。
+
+现在需要开始实现virtualDOM了。
