@@ -7,3 +7,63 @@ https://zhuanlan.zhihu.com/p/30073543
 现在需要开始实现virtualDOM了。
 
 深度剖析：如何实现一个 Virtual DOM 算法: https://github.com/livoras/blog/issues/13
+
+2018-06-26:
+真的的入口函数是：React.createElement(type, config, ...children)
+Type: html tag
+config: props, className, key...
+children: 剩余参数（Rest Parameters）
+return: one virtual Node
+
+class Vnode(){
+    construction(type, props, key, ref) {
+        this.type = type;
+        this.props = props;
+        this.key = key;
+        this.ref = ref;
+    }
+}
+
+function createElement(type, config, ...children) {
+    let props = {},
+        key = null,
+        ref = null,
+        childrenLength = children.length;
+
+    if (config != null) {  // NOTE: undefined == null, return true, so check both undefined and null
+        key = config.key === undefined ? null : '' + config.key; // convert key to string
+        ref = config.ref === undefined ? null : config.ref;
+
+        // then parse config to props
+        for (let propName in config) {
+            // no key or ref in props
+            if (propName === 'key' || propName === 'ref')
+                continue;
+            if (config.hasOwnProperty(propName)) {
+                props[propName] = config[propName]
+            }
+        }
+    }
+
+    if (childrenLength === 1){
+        props.children = children[0];
+    }
+    else{
+        props.children = children;
+    }
+
+    return new Vnode(type, props, key, ref);
+}
+
+// TODO: 理解下Module.Export 和 Exports， 写进general diary
+
+export const React = {
+    createElement;
+}
+
+
+// NOTE: 以上就是通过createElement()建立了一棵虚拟树， 由Vnode构成，Vnode里的psops.children包含了子Vnode。
+// 从而建立了一棵Vnode树结构。
+//
+//
+// 下一步就是用ReactDOM.render()来解析这棵虚拟树，翻译成真正的DOM。
