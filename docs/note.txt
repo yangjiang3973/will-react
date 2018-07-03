@@ -67,3 +67,186 @@ export const React = {
 //
 //
 // 下一步就是用ReactDOM.render()来解析这棵虚拟树，翻译成真正的DOM。
+
+function renderByLuy(Vnode, container) {
+    if (!Vnode) return;
+
+    const { type, props } = Vnode;
+
+    if (!type) return;
+
+    const { children } = props;
+
+    let domNode;
+    domNode = document.createElement(type);
+    // NOTE: loop through all children, not only one?
+    mountChildren(children, domNode);  // NOTE: recusion!
+    mapProps(domNode, props);
+
+    container.appendChild(donNode);
+}
+
+function mountChildren(children, domNode) {
+    renderByLuy(children, domNode);
+}
+
+function mapProps(domNode, props){
+    for (let propsName in props){
+        if (propsName === 'children')
+            continue;
+        if (propsName === 'style') {
+            let style = props['style']
+            Object.keys(style).forEach((styleName) => {
+                domNode.style[styleName] = style[styleName];
+            });
+            continue
+        }
+        domNode[propsName] = props[propsName];
+    }
+}
+
+export const ReactDOM = {
+    render: renderByLuy
+}
+
+
+
+// STEP2:
+
+//组件=component
+class Component {
+    constructor(props) {
+        this.props = props;
+        this.state = this.state || {}
+
+        this.nextState = null
+    }
+
+    setState(partialState) {
+        // TODO
+    }
+
+    render() {
+        // TODO
+    }
+}
+
+function renderByLuy(Vnode, container) {
+    if (!Vnode) return;
+
+    const { type, props } = Vnode;
+
+    if (!type) return;
+
+    const { children } = props;
+
+    let domNode;
+    const VnodeType = typeof type;
+
+    if(VnodeType === 'function') {
+        domNode = renderComponent(Vnode, container);
+    }
+    else if(VnodeType === 'string') {
+        domNode = document.createElement(type);
+    }
+
+    // NOTE: loop through all children, not only one?
+    mountChildren(children, domNode);  // NOTE: recusion!
+    mapProps(domNode, props);
+
+    container.appendChild(domNode);
+
+    return domNode;
+}
+
+function renderComponent(Vnode, container) {
+    const ComponentClass = Vnode.type;
+    const { props } = Vnode.props;
+    const instance = new ComponentClass(props);
+
+    const renderedVnode = instance.render();
+    const domNode = renderByLuy(renderedVnode, container);
+
+    instance.Vnode = renderedVnode; // store Vnode into the instance for recording
+    return domNode;
+}
+
+// STEP3:
+class Component {
+    constructor(props) {
+        this.props = props;
+        this.state = this.state || {}
+
+        this.nextState = null
+    }
+
+    setState(partialState) {
+        const preState = this.state;
+        this.nextState = {...this.state, ...partialState};
+        this.state = this.nextState;
+
+        const oldVnode = this.Vnode;
+        const newVnode = this.render();
+        updateComponent(this, oldVnode, newVnode);
+    }
+
+    render() {
+        // TODO
+    }
+}
+
+function updateComponent(instance, oldVnode, newVnode) {
+    //TODO
+}
+
+// diff rules:
+// 1. if newVnode has a differnt type from old Vnode, delete old one and insert new one.
+// 2. if types are the same, do diff!
+
+class fuck{
+
+    render() {
+        return <div> hello { props.name } </div>
+    }
+}
+
+function renderByLuy(Vnode, container) {
+    if (!Vnode) return;
+
+    const { type, props } = Vnode;
+
+    if (!type) return;
+
+    const { children } = props;
+
+    let domNode;
+    const VnodeType = typeof type;
+
+    if(VnodeType === 'function') {
+        domNode = renderComponent(Vnode, container);
+    }
+    else if(VnodeType === 'string') {
+        domNode = document.createElement(type);
+    }
+
+    // NOTE: loop through all children, not only one?
+    mountChildren(children, domNode);  // NOTE: recusion!
+    mapProps(domNode, props);
+
+    // NOTE: New change here!
+    Vnode._hostNode = domNode;
+    container.appendChild(domNode);
+
+    return domNode;
+}
+
+function updateComponent(instance, oldVnode, newVnode) {
+    if(oldVnode.type === newVnode.type) {
+        mapProps(oldVnode._hostNode, newVnode.props) // update node. why only props?
+        //NOTE: setState only need to change props?
+        // or this is like a makeup
+    }
+    else {
+        // remove
+    }
+}
