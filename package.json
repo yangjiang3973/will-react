@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "transform": "babel --plugins transform-react-jsx src/app.jsx --out-file src/app.js"
+    "transform": "babel --plugins transform-react-jsx app/app.jsx --out-file app/app.js"
   },
   "repository": {
     "type": "git",

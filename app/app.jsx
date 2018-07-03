@@ -1,3 +1,6 @@
+import React from './src/react.js'
+import ReactDOM from './src/react.js'
+
 const MyCoolJSXQuoteComponent = ({quote, author}) => {
   return (
     <div className="quote-container">
