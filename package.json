@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "transform": "babel --plugins transform-react-jsx app/app.jsx --out-file app/app.js"
+    "transform": "babel --plugins transform-react-jsx app/app.jsx --out-file app/app.js",
+    "pack": "browserify ./app/app.js -o ./app/bundle.js",
+    "build": "npm run transform && npm run pack"
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,12 @@
   "homepage": "https://github.com/IanJiang0817/will-react#readme",
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-plugin-transform-react-jsx": "^6.24.1"
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "install": "^0.12.1",
+    "npm": "^6.1.0"
+  },
+  "dependencies": {
+    "browserify": "^16.2.2"
   }
 }

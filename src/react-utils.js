@@ -16,3 +16,10 @@ function isEvent(name) {
 function isClassName(name) {
     return name === 'className';
 }
+
+module.exports = {
+    isClass: isClass,
+    isFunc: isFunc,
+    isEvent: isEvent,
+    isClassName: isClassName,
+}

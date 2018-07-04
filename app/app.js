@@ -1,7 +1,15 @@
-import React from './src/react.js';
-import ReactDOM from './src/react.js';
+'use strict';
 
-const MyCoolJSXQuoteComponent = ({ quote, author }) => {
+// import React from './src/react.js'
+// import ReactDOM from './src/reactDOM.js'
+
+var React = require('../src/react.js');
+var ReactDOM = require('../src/reactDOM.js');
+
+var MyCoolJSXQuoteComponent = function MyCoolJSXQuoteComponent(_ref) {
+  var quote = _ref.quote,
+      author = _ref.author;
+
   return React.createElement(
     'div',
     { className: 'quote-container' },
