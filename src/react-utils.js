@@ -17,9 +17,9 @@ function isClassName(name) {
     return name === 'className';
 }
 
-module.exports = {
-    isClass: isClass,
-    isFunc: isFunc,
-    isEvent: isEvent,
-    isClassName: isClassName,
+export {
+    isClass,
+    isFunc,
+    isEvent,
+    isClassName,
 }

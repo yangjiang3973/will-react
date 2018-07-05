@@ -1,8 +1,8 @@
 const REACT_CLASS = 'REACT_CLASS';
 
 function render(el, domEl) {
-    rootDOMElement = domEl;
-    rootReactElement = el;
+    let rootDOMElement = domEl;
+    let rootReactElement = el;
     let currentDOM;
     if (rootReactElement.type === REACT_CLASS) {
         currentDOM = rootReactElement.render();
@@ -13,6 +13,6 @@ function render(el, domEl) {
     domEl.appendChild(currentDOM);
 }
 
-module.exports = {
-    render: render,
+export default {
+    render,
 }
