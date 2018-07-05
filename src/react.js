@@ -1,4 +1,4 @@
-const { isClass, isFunc, isEvent, isClassName} = require('./react-utils.js');
+import { isClass, isFunc, isEvent, isClassName} from './react-utils.js';
 
 let rootDOMElement, rootReactElement;
 const REACT_CLASS = 'REACT_CLASS';
@@ -99,7 +99,7 @@ function reRender() {
     ReactDOM.render(rootReactElement, rootDOMElement);
 }
 
-module.exports = {
-    createElement: createElement,
-    Component: Component,
+export default {
+    createElement,
+    Component,
 }
