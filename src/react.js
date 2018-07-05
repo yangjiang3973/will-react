@@ -6,6 +6,15 @@ const REACT_CLASS = 'REACT_CLASS';
 let classCounter = 0;
 const classMap = {};
 
+class Vnode(){
+    construction(type, props, key, ref) {
+        this.type = type;
+        this.props = props;
+        this.key = key;
+        this.ref = ref;
+    }
+}
+
 function createElement(el, props, ...children) {
     return anElement(el, props, children);
 }
