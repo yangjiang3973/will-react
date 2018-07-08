@@ -55,8 +55,6 @@ function createElement(type, config, ...children) {
     return new Vnode(type, props, key, ref);
 }
 
-// TODO: 理解下Module.Export 和 Exports， 写进general diary
-
 export const React = {
     createElement;
 }

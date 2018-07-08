@@ -6,8 +6,8 @@ const REACT_CLASS = 'REACT_CLASS';
 let classCounter = 0;
 const classMap = {};
 
-class Vnode(){
-    construction(type, props, key, ref) {
+class Vnode {
+    constructor(type, props, key, ref) {
         this.type = type;
         this.props = props;
         this.key = key;
@@ -15,9 +15,64 @@ class Vnode(){
     }
 }
 
-function createElement(el, props, ...children) {
-    return anElement(el, props, children);
+class Component {
+    constructor(props) {
+        this.props = props;
+        this.state = this.state || {}
+
+        this.nextState = null
+    }
+
+    setState(partialState) {
+        // TODO
+    }
+
+    render() {
+        // TODO
+    }
 }
+
+// use createElement() create Vnode, extract info from params to Vnode
+function createElement(type, config, ...children) {
+    let props = {},
+        key = null,
+        ref = null;
+    props.children = children;  //children is always array
+
+    // parse config
+    if (config != null) {  // NOTE: undefined == null, return true, so check both undefined and null
+        key = config.key === undefined ? null : '' + config.key; // convert key to string
+        ref = config.ref === undefined ? null : config.ref;
+        // then parse config to props
+        for (let propName in config) {
+            // no key or ref in props
+            if (propName === 'key' || propName === 'ref')
+                continue;
+            if (config.hasOwnProperty(propName)) {
+                props[propName] = config[propName]
+            }
+        }
+    }
+
+    return new Vnode(type, props, key, ref);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* NOTE: replace with virtual node*/
+// function createElement(el, props, ...children) {
+//     return anElement(el, props, children);
+// }
 
 function anElement(element, props, children) {
     if (isClass(element)) {
