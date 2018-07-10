@@ -33,3 +33,54 @@ import ReactDOM from '../src/reactDOM.js'
 // ReactDOM.render(helloWorld2, document.getElementById('root'));
 
 // TEST 3
+// class Hello extends React.Component{
+//     render() {
+//         return (
+//             <div>
+//                 Hello!!!
+//                 <span>
+//                     aaaaaa
+//                     <span>
+//                         vvvvvvvvvv
+//                     </span>
+//                 </span>
+//             </div>
+//         )
+//     }
+// }
+//
+// const helloWorld = (
+//     <div>
+//         ssssss
+//         <Hello/>
+//     </div>
+//     );
+// ReactDOM.render(helloWorld, document.getElementById('root'));
+
+// TEST 4
+class Hello extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
+    render() {
+        return (
+            <div>
+                Hello!!!
+                {/* TODO: how to automatically render all elems in children array */}
+                {this.props.children[0]}
+            </div>
+        )
+    }
+}
+
+const helloWorld = (
+    <div>
+        ssssss
+        <Hello>
+            <div>Yang</div>
+        </Hello>
+    </div>
+    );
+ReactDOM.render(helloWorld, document.getElementById('root'));

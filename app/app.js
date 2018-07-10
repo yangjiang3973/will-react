@@ -22,16 +22,70 @@ import ReactDOM from '../src/reactDOM.js';
 //
 // ReactDOM.render(helloWorld, document.getElementById('root'));
 
-//TEST 2
-const helloWorld2 = React.createElement(
+// TEST 2
+// const helloWorld2 = <div style={{background: 'red'}}>
+//                         hello sb!
+//                         <div>
+//                             hello tony!
+//                         </div>
+//                     </div>;
+//
+// ReactDOM.render(helloWorld2, document.getElementById('root'));
+
+// TEST 3
+// class Hello extends React.Component{
+//     render() {
+//         return (
+//             <div>
+//                 Hello!!!
+//                 <span>
+//                     aaaaaa
+//                     <span>
+//                         vvvvvvvvvv
+//                     </span>
+//                 </span>
+//             </div>
+//         )
+//     }
+// }
+//
+// const helloWorld = (
+//     <div>
+//         ssssss
+//         <Hello/>
+//     </div>
+//     );
+// ReactDOM.render(helloWorld, document.getElementById('root'));
+
+// TEST 4
+class Hello extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
+    render() {
+        return React.createElement(
+            'div',
+            null,
+            'Hello!!!',
+            this.props.children[0]   
+        );
+    }
+}
+
+const helloWorld = React.createElement(
     'div',
-    { style: { background: 'red' } },
-    'hello sb!',
+    null,
+    'ssssss',
     React.createElement(
-        'div',
+        Hello,
         null,
-        'hello tony!'
+        React.createElement(
+            'div',
+            null,
+            'Yang'
+        )
     )
 );
-
-ReactDOM.render(helloWorld2, document.getElementById('root'));
+ReactDOM.render(helloWorld, document.getElementById('root'));
