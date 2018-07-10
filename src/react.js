@@ -143,15 +143,15 @@ function appendProp(element, propName, propVal) {
     }
 }
 
-class Component {
-    constructor(props) {
-        this.props = props;
-    }
-    setState (state) {
-        this.state = Object.assign({}, this.state, state);
-        reRender();
-    }
-}
+// class Component {
+//     constructor(props) {
+//         this.props = props;
+//     }
+//     setState (state) {
+//         this.state = Object.assign({}, this.state, state);
+//         reRender();
+//     }
+// }
 
 function reRender() {
     // delete old dom tree
