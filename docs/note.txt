@@ -248,3 +248,11 @@ function updateComponent(instance, oldVnode, newVnode) {
         // remove
     }
 }
+
+
+
+
+// 2018-11-27
+今天重新config了一下整个项目的编译
+用了webpack和babel 通过dev-server来跑bundle
+下一步重新读之前写的code 并且不会的看别人的 继续把这个项目做下去
