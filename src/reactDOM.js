@@ -1,7 +1,3 @@
-// const REACT_CLASS = 'REACT_CLASS';
-
-// TODO: refactor for Component wrapper
-
 function render(Vnode, container) {  // NOTE: 2 kinds of Vnode
     if (!Vnode) return;
     let { type, props } = Vnode;
@@ -12,9 +8,9 @@ function render(Vnode, container) {  // NOTE: 2 kinds of Vnode
     let domNode;
 
     if(VnodeType === 'function') {
-        const VnodeRoot = renderComponent(Vnode);
-        type = VnodeRoot.type;
-        props = VnodeRoot.props;
+        const VnodeTop = renderComponent(Vnode);
+        type = VnodeTop.type;
+        props = VnodeTop.props;
         children = props.children;
         domNode = document.createElement(type);
     }
@@ -28,21 +24,13 @@ function render(Vnode, container) {  // NOTE: 2 kinds of Vnode
     mapProps(domNode, props);
 
     container.appendChild(domNode);
-}
 
-function renderComponent(VnodeWrapper) {  //
-    const ComponentClass = VnodeWrapper.type;
-    const { props } = VnodeWrapper;
-    const instance = new ComponentClass(props);
-
-    const unwrappedVnode = instance.render();  // generate Vnodes(like a tree) in class's render()
-
-    instance.Vnode = unwrappedVnode; // store Vnode into the instance for recording
-    return unwrappedVnode;
+    // NOTE????
+    return domNode;//注意这里我们加了一行代码，我们要将我们生成的真实节点返回出去，作为其他函数调用的时候的父亲节点
 }
 
 function mountChildren(child, domNode) {
-    // check children's type
+    // check children's type, if string, not Vnode, return
     if(typeof(child) === 'string') {
         domNode.innerHTML += child;
         return;
@@ -66,22 +54,15 @@ function mapProps(domNode, props){
     }
 }
 
+function renderComponent(VnodeWrapper) {  //
+    const ComponentClass = VnodeWrapper.type;
+    const { props } = VnodeWrapper;
+    const instance = new ComponentClass(props);
+    const unwrappedVnode = instance.render();  // generate Vnodes(like a tree) in class's render()
 
-
-
-
-// function render(el, domEl) {
-//     let rootDOMElement = domEl;
-//     let rootReactElement = el;
-//     let currentDOM;
-//     if (rootReactElement.type === REACT_CLASS) {
-//         currentDOM = rootReactElement.render();
-//     }
-//     else {
-//         currentDOM = rootReactElement;
-//     }
-//     domEl.appendChild(currentDOM);
-// }
+    instance.Vnode = unwrappedVnode; // store Vnode into the instance for recording
+    return unwrappedVnode;
+}
 
 export default {
     render,

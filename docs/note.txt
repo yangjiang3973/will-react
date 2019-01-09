@@ -60,7 +60,7 @@ export const React = {
 }
 
 
-// NOTE: 以上就是通过createElement()建立了一棵虚拟树， 由Vnode构成，Vnode里的psops.children包含了子Vnode。
+// NOTE: 以上就是通过createElement()建立了一棵虚拟树， 由Vnode构成，Vnode里的props.children包含了子Vnode。
 // 从而建立了一棵Vnode树结构。
 //
 //

@@ -18,8 +18,12 @@ import ReactDOM from '../src/reactDOM.js'
 //   document.getElementById('root'));
 
 // TEST 1
-// const helloWorld = <div>hello sb!</div>;
-//
+// const helloWorld = <div>
+// aaaa
+//                         <div >
+//                             aaaa
+//                         </div>
+//                    </div>;
 // ReactDOM.render(helloWorld, document.getElementById('root'));
 
 // TEST 2
@@ -65,22 +69,20 @@ class Hello extends React.Component{
     }
 
     render() {
+        // console.log(this.props);
         return (
             <div>
-                Hello!!!
-                {/* TODO: how to automatically render all elems in children array */}
-                {this.props.children[0]}
+                {this.props.children}
             </div>
         )
     }
 }
-
+//
 const helloWorld = (
-    <div>
-        ssssss
         <Hello>
             <div>Yang</div>
+            <div>Jiang</div>
         </Hello>
-    </div>
     );
+console.log(helloWorld);
 ReactDOM.render(helloWorld, document.getElementById('root'));
