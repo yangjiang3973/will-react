@@ -13,6 +13,7 @@ function render(Vnode, container) {  // NOTE: 2 kinds of Vnode
         props = VnodeTop.props;
         children = props.children;
         domNode = document.createElement(type);
+        console.log(domNode);
     }
     else if(VnodeType === 'string') {
         domNode = document.createElement(type);
@@ -22,6 +23,9 @@ function render(Vnode, container) {  // NOTE: 2 kinds of Vnode
         mountChildren(children[i], domNode);  // NOTE: recusion!
     }
     mapProps(domNode, props);
+
+    // NOTE???
+    Vnode._hostNode = domNode; // for tracing back
 
     container.appendChild(domNode);
 

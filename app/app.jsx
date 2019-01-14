@@ -62,27 +62,56 @@ import ReactDOM from '../src/reactDOM.js'
 // ReactDOM.render(helloWorld, document.getElementById('root'));
 
 // TEST 4
-class Hello extends React.Component{
+// class Hello extends React.Component{
+//     constructor(props) {
+//         super(props);
+//         this.state = {};
+//     }
+//
+//     render() {
+//         // console.log(this.props);
+//         return (
+//             <div>
+//                 {this.props.children}
+//             </div>
+//         )
+//     }
+// }
+// //
+// const helloWorld = (
+//         <Hello>
+//             <div>Yang</div>
+//             <div>Jiang</div>
+//         </Hello>
+//     );
+// console.log(helloWorld);
+// ReactDOM.render(helloWorld, document.getElementById('root'));
+
+// TEST 5
+class FuckApp extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        setInterval(function () {
+            const color = ['#eee', 'black', 'red', 'green', 'blue','grey','#133234','#123213','222345','998232']
+            const rand = parseInt(Math.min(10, Math.random() * 10))
+            this.setState({
+                color: color[rand]
+            })
+        }.bind(this), 1000);
+    }
+    state = {
+        color: 'red'
     }
 
     render() {
-        // console.log(this.props);
-        return (
-            <div>
-                {this.props.children}
-            </div>
-        )
+        return <div
+            style={{ height: '100px', width: '100px', background: this.state.color }}
+            className='I am FuckApp component' />
     }
 }
-//
-const helloWorld = (
-        <Hello>
-            <div>Yang</div>
-            <div>Jiang</div>
-        </Hello>
-    );
-console.log(helloWorld);
-ReactDOM.render(helloWorld, document.getElementById('root'));
+
+
+ReactDOM.render(
+    <FuckApp />
+    , document.getElementById('root')
+);

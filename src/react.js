@@ -24,11 +24,43 @@ class Component {
     }
 
     setState(partialState) {
-        // TODO
+        const preState = this.state; // store old state
+        this.nextState = {...this.state, ...partialState}; // store latest state
+        this.state = this.nextState; //update state
+
+        const oldVnode = this.Vnode;
+        const newVnode = this.render();
+        updateComponent(this, oldVnode, newVnode);
     }
 
     render() {
         // TODO
+    }
+}
+
+// Note: should move mapProps to utils???
+function updateComponent(instance, oldVnode, newVnode){
+    if (oldVnode.type === newVnode.type) {
+        mapProps(oldVnode._hostNode, newVnode.props); // update node
+    }
+    else {
+        // remove because of differernt types
+    }
+}
+
+function mapProps(domNode, props){
+    for (let propsName in props){
+        if (propsName === 'children')
+            continue;
+        if (propsName === 'style') {
+            let style = props['style']
+            console.log(domNode);    // domNode is undefined!!!!
+            Object.keys(style).forEach((styleName) => {
+                domNode.style[styleName] = style[styleName];
+            });
+            continue
+        }
+        domNode[propsName] = props[propsName];
     }
 }
 
