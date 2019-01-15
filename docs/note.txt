@@ -248,3 +248,6 @@ function updateComponent(instance, oldVnode, newVnode) {
         // remove
     }
 }
+
+------------------------------------2019-01-14---------
+以上的都搞定了，有了最最基础的state，接下来想想下一个阶段的目标。
