@@ -1,3 +1,5 @@
+import { isClass, isFunc, isEvent, isClassName} from './react-utils.js';
+
 function render(Vnode, container) {  // NOTE: 2 kinds of Vnode
     if (!Vnode) return;
     let { type, props } = Vnode;
@@ -6,17 +8,18 @@ function render(Vnode, container) {  // NOTE: 2 kinds of Vnode
 
     const VnodeType = typeof type;
     let domNode;
-
+    let VnodeTop;
     if(VnodeType === 'function') {
-        const VnodeTop = renderComponent(Vnode);
+        VnodeTop = renderComponent(Vnode);
         type = VnodeTop.type;
         props = VnodeTop.props;
         children = props.children;
         domNode = document.createElement(type);
-        console.log(domNode);
+        VnodeTop._hostNode = domNode; // for tracing back
     }
     else if(VnodeType === 'string') {
         domNode = document.createElement(type);
+        Vnode._hostNode = domNode;
     }
 
     for(let i=0; i<children.length; i++){
@@ -25,7 +28,7 @@ function render(Vnode, container) {  // NOTE: 2 kinds of Vnode
     mapProps(domNode, props);
 
     // NOTE???
-    Vnode._hostNode = domNode; // for tracing back
+
 
     container.appendChild(domNode);
 
@@ -43,6 +46,7 @@ function mountChildren(child, domNode) {
     render(child, domNode);
 }
 
+
 function mapProps(domNode, props){
     for (let propsName in props){
         if (propsName === 'children')
@@ -53,6 +57,9 @@ function mapProps(domNode, props){
                 domNode.style[styleName] = style[styleName];
             });
             continue
+        }
+        else if(isEvent(propsName)){
+            domNode.addEventListener(propsName.substring(2).toLowerCase(), props[propsName]);
         }
         domNode[propsName] = props[propsName];
     }

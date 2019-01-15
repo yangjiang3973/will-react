@@ -28,8 +28,10 @@ class Component {
         this.nextState = {...this.state, ...partialState}; // store latest state
         this.state = this.nextState; //update state
 
-        const oldVnode = this.Vnode;
-        const newVnode = this.render();
+        const oldVnode = this.Vnode.props.children[0];    // should check all , not use index!!
+        const newVnode = this.render().props.children[0];
+        console.log(oldVnode);
+        console.log(newVnode);
         updateComponent(this, oldVnode, newVnode);
     }
 
@@ -42,6 +44,8 @@ class Component {
 function updateComponent(instance, oldVnode, newVnode){
     if (oldVnode.type === newVnode.type) {
         mapProps(oldVnode._hostNode, newVnode.props); // update node
+        console.log(newVnode.props);    // domNode is undefined!!!!
+
     }
     else {
         // remove because of differernt types
@@ -49,12 +53,17 @@ function updateComponent(instance, oldVnode, newVnode){
 }
 
 function mapProps(domNode, props){
+    console.log(domNode);    // domNode is undefined!!!!
+
     for (let propsName in props){
         if (propsName === 'children')
             continue;
-        if (propsName === 'style') {
+        else if(isEvent(propsName)){
+            domNode.addEventListener(propsName.substring(2).toLowerCase(), props[propsName]);
+        }
+        else if (propsName === 'style') {
             let style = props['style']
-            console.log(domNode);    // domNode is undefined!!!!
+            console.log(style);    // domNode is undefined!!!!
             Object.keys(style).forEach((styleName) => {
                 domNode.style[styleName] = style[styleName];
             });

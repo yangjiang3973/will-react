@@ -91,22 +91,33 @@ import ReactDOM from '../src/reactDOM.js'
 class FuckApp extends React.Component {
     constructor(props) {
         super(props);
-        setInterval(function () {
-            const color = ['#eee', 'black', 'red', 'green', 'blue','grey','#133234','#123213','222345','998232']
-            const rand = parseInt(Math.min(10, Math.random() * 10))
-            this.setState({
-                color: color[rand]
-            })
-        }.bind(this), 1000);
     }
+
     state = {
         color: 'red'
     }
 
+    _handleClick = () => {
+        console.log('cccccc');
+        const color = ['#eee', 'black', 'red', 'green', 'blue','grey','#133234','#123213','#222345','#998232']
+        const rand = parseInt(Math.min(10, Math.random() * 10))
+        console.log(color[rand]);
+        this.setState({
+            color: color[rand]
+        });
+
+        // console.log(this);
+    }
+
     render() {
-        return <div
-            style={{ height: '100px', width: '100px', background: this.state.color }}
-            className='I am FuckApp component' />
+        return (
+            <div>
+                <div
+                style={{ height: '100px', width: '100px', background: this.state.color }}
+                className='I am FuckApp component' />
+                <button onClick={this._handleClick}>'aaa'</button>
+            </div>
+        );
     }
 }
 
