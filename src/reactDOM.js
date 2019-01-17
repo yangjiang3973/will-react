@@ -10,7 +10,7 @@ function render(Vnode, container) {  // NOTE: 2 kinds of Vnode
     let domNode;
     let VnodeTop;
     if(VnodeType === 'function') {
-        VnodeTop = renderComponent(Vnode);
+        VnodeTop = renderComponent(Vnode, container);
         type = VnodeTop.type;
         props = VnodeTop.props;
         children = props.children;
@@ -51,27 +51,31 @@ function mapProps(domNode, props){
     for (let propsName in props){
         if (propsName === 'children')
             continue;
-        if (propsName === 'style') {
+        else if (propsName === 'style') {
             let style = props['style']
             Object.keys(style).forEach((styleName) => {
                 domNode.style[styleName] = style[styleName];
             });
             continue
         }
-        else if(isEvent(propsName)){
+        else if (isEvent(propsName)){
             domNode.addEventListener(propsName.substring(2).toLowerCase(), props[propsName]);
         }
+
         domNode[propsName] = props[propsName];
     }
 }
 
-function renderComponent(VnodeWrapper) {  //
+function renderComponent(VnodeWrapper, parentNode) {  //
     const ComponentClass = VnodeWrapper.type;
     const { props } = VnodeWrapper;
     const instance = new ComponentClass(props);
     const unwrappedVnode = instance.render();  // generate Vnodes(like a tree) in class's render()
 
+    VnodeWrapper._instance = instance;
     instance.Vnode = unwrappedVnode; // store Vnode into the instance for recording
+    instance.parentNode = parentNode; // store parent dom node for use
+
     return unwrappedVnode;
 }
 

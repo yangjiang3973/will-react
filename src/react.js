@@ -41,6 +41,12 @@ class Component {
 }
 
 // Note: should move mapProps to utils???
+// why not call render() again from its parent dom node: render(oldVnode, parentDOMNode)
+// not efficient!
+
+// NOTE: update the DOM based on the changes made in the vDOM. This process is also called patching
+// we're aiming to update the DOM only where it has changed.
+
 function updateComponent(instance, oldVnode, newVnode){
     if (oldVnode.type === newVnode.type) {
         mapProps(oldVnode._hostNode, newVnode.props); // update node
