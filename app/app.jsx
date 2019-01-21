@@ -18,8 +18,12 @@ import ReactDOM from '../src/reactDOM.js'
 //   document.getElementById('root'));
 
 // TEST 1
-// const helloWorld = <div>hello sb!</div>;
-//
+// const helloWorld = <div>
+// aaaa
+//                         <div >
+//                             aaaa
+//                         </div>
+//                    </div>;
 // ReactDOM.render(helloWorld, document.getElementById('root'));
 
 // TEST 2
@@ -58,29 +62,67 @@ import ReactDOM from '../src/reactDOM.js'
 // ReactDOM.render(helloWorld, document.getElementById('root'));
 
 // TEST 4
-class Hello extends React.Component{
+// class Hello extends React.Component{
+//     constructor(props) {
+//         super(props);
+//         this.state = {};
+//     }
+//
+//     render() {
+//         // console.log(this.props);
+//         return (
+//             <div>
+//                 {this.props.children}
+//             </div>
+//         )
+//     }
+// }
+// //
+// const helloWorld = (
+//         <Hello>
+//             <div>Yang</div>
+//             <div>Jiang</div>
+//         </Hello>
+//     );
+// console.log(helloWorld);
+// ReactDOM.render(helloWorld, document.getElementById('root'));
+
+// TEST 5
+class FuckApp extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+    }
+
+    state = {
+        color: 'red'
+    }
+
+    _handleClick = () => {
+        console.log('cccccc');
+        const color = ['#eee', 'black', 'red', 'green', 'blue','grey','#133234','#123213','#222345','#998232']
+        const rand = parseInt(Math.min(10, Math.random() * 10))
+        console.log(color[rand]);
+        this.setState({
+            color: color[rand]
+        });
+
+        // console.log(this);
     }
 
     render() {
         return (
             <div>
-                Hello!!!
-                {/* TODO: how to automatically render all elems in children array */}
-                {this.props.children[0]}
+                <div
+                style={{ height: '100px', width: '100px', background: this.state.color }}
+                className='I am FuckApp component' />
+                <button onClick={this._handleClick}>'aaa'</button>
             </div>
-        )
+        );
     }
 }
 
-const helloWorld = (
-    <div>
-        ssssss
-        <Hello>
-            <div>Yang</div>
-        </Hello>
-    </div>
-    );
-ReactDOM.render(helloWorld, document.getElementById('root'));
+
+ReactDOM.render(
+    <FuckApp />
+    , document.getElementById('root')
+);

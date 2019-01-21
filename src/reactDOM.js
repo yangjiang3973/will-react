@@ -1,6 +1,4 @@
-// const REACT_CLASS = 'REACT_CLASS';
-
-// TODO: refactor for Component wrapper
+import { isClass, isFunc, isEvent, isClassName} from './react-utils.js';
 
 function render(Vnode, container) {  // NOTE: 2 kinds of Vnode
     if (!Vnode) return;
@@ -10,16 +8,18 @@ function render(Vnode, container) {  // NOTE: 2 kinds of Vnode
 
     const VnodeType = typeof type;
     let domNode;
-
+    let VnodeTop;
     if(VnodeType === 'function') {
-        const VnodeRoot = renderComponent(Vnode);
-        type = VnodeRoot.type;
-        props = VnodeRoot.props;
+        VnodeTop = renderComponent(Vnode, container);
+        type = VnodeTop.type;
+        props = VnodeTop.props;
         children = props.children;
         domNode = document.createElement(type);
+        VnodeTop._hostNode = domNode; // for tracing back
     }
     else if(VnodeType === 'string') {
         domNode = document.createElement(type);
+        Vnode._hostNode = domNode;
     }
 
     for(let i=0; i<children.length; i++){
@@ -27,22 +27,17 @@ function render(Vnode, container) {  // NOTE: 2 kinds of Vnode
     }
     mapProps(domNode, props);
 
+    // NOTE???
+
+
     container.appendChild(domNode);
-}
 
-function renderComponent(VnodeWrapper) {  //
-    const ComponentClass = VnodeWrapper.type;
-    const { props } = VnodeWrapper;
-    const instance = new ComponentClass(props);
-
-    const unwrappedVnode = instance.render();  // generate Vnodes(like a tree) in class's render()
-
-    instance.Vnode = unwrappedVnode; // store Vnode into the instance for recording
-    return unwrappedVnode;
+    // NOTE????
+    return domNode;//注意这里我们加了一行代码，我们要将我们生成的真实节点返回出去，作为其他函数调用的时候的父亲节点
 }
 
 function mountChildren(child, domNode) {
-    // check children's type
+    // check children's type, if string, not Vnode, return
     if(typeof(child) === 'string') {
         domNode.innerHTML += child;
         return;
@@ -51,37 +46,39 @@ function mountChildren(child, domNode) {
     render(child, domNode);
 }
 
+
 function mapProps(domNode, props){
     for (let propsName in props){
         if (propsName === 'children')
             continue;
-        if (propsName === 'style') {
+        else if (propsName === 'style') {
             let style = props['style']
             Object.keys(style).forEach((styleName) => {
                 domNode.style[styleName] = style[styleName];
             });
             continue
         }
-        domNode[propsName] = props[propsName];
+        else if (isEvent(propsName)){
+            domNode.addEventListener(propsName.substring(2).toLowerCase(), props[propsName]);
+        }
+        else {
+            domNode[propsName] = props[propsName];
+        }
     }
 }
 
+function renderComponent(VnodeWrapper, parentNode) {  //
+    const ComponentClass = VnodeWrapper.type;
+    const { props } = VnodeWrapper;
+    const instance = new ComponentClass(props);
+    const unwrappedVnode = instance.render();  // generate Vnodes(like a tree) in class's render()
 
+    VnodeWrapper._instance = instance;
+    instance.Vnode = unwrappedVnode; // store Vnode into the instance for recording
+    instance.parentNode = parentNode; // store parent dom node for use
 
-
-
-// function render(el, domEl) {
-//     let rootDOMElement = domEl;
-//     let rootReactElement = el;
-//     let currentDOM;
-//     if (rootReactElement.type === REACT_CLASS) {
-//         currentDOM = rootReactElement.render();
-//     }
-//     else {
-//         currentDOM = rootReactElement;
-//     }
-//     domEl.appendChild(currentDOM);
-// }
+    return unwrappedVnode;
+}
 
 export default {
     render,

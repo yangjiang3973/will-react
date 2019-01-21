@@ -15,7 +15,7 @@ class Vnode {
     }
 }
 
-class Component {
+class Component {  // in Luy, this is called ReactClass in version 0.0.1
     constructor(props) {
         this.props = props;
         this.state = this.state || {}
@@ -23,8 +23,16 @@ class Component {
         this.nextState = null
     }
 
-    setState(partialState) {
-        // TODO
+    setState(partialState, callback) {
+        const preState = this.state; // store old state
+        this.nextState = {...this.state, ...partialState}; // store latest state
+        this.state = this.nextState; //update state
+
+        const oldVnode = this.Vnode.props.children[0];    // should check all , not use index!!
+        const newVnode = this.render().props.children[0];
+        // console.log(oldVnode);
+        // console.log(newVnode);
+        updateComponent(this, oldVnode, newVnode);
     }
 
     render() {
@@ -32,20 +40,63 @@ class Component {
     }
 }
 
-// use createElement() create Vnode, extract info from params to Vnode
+// Note: should move mapProps to utils???
+// why not call render() again from its parent dom node: render(oldVnode, parentDOMNode)
+// not efficient!
+
+// NOTE: update the DOM based on the changes made in the vDOM. This process is also called patching
+// we're aiming to update the DOM only where it has changed.
+
+function updateComponent(instance, oldVnode, newVnode){
+    if (oldVnode.type === newVnode.type) {
+        mapProps(oldVnode._hostNode, newVnode.props); // update node
+
+    }
+    else {
+        // remove because of differernt types
+        // remove completely and render again
+        // container.removeChild(), container.appendChild(domNode)
+    }
+}
+
+function mapProps(domNode, props){
+    for (let propsName in props){
+        if (propsName === 'children')
+            continue;
+        else if(isEvent(propsName)){
+            domNode.addEventListener(propsName.substring(2).toLowerCase(), props[propsName]);
+        }
+        else if (propsName === 'style') {
+            let style = props['style']
+            Object.keys(style).forEach((styleName) => {
+                domNode.style[styleName] = style[styleName];
+            });
+            continue
+        }
+        domNode[propsName] = props[propsName];
+    }
+}
+
+// use createElement() create Vnode, extract info from params to Vnode, and build the Vtree
 function createElement(type, config, ...children) {
     let props = {},
         key = null,
         ref = null;
-    props.children = children;  //children is always array
+    // component wrapper may make children become nested array
+    if (children.length === 1 && Array.isArray(children[0])){
+        props.children = children[0]
+    }
+    else {
+        props.children = children
+    }
 
     // parse config
     if (config != null) {  // NOTE: undefined == null, return true, so check both undefined and null
-        key = config.key === undefined ? null : '' + config.key; // convert key to string
+        key = config.key === undefined ? null : '' + config.key; // convert key to string or null
         ref = config.ref === undefined ? null : config.ref;
         // then parse config to props
         for (let propName in config) {
-            // no key or ref in props
+            // make sure no key or ref in props
             if (propName === 'key' || propName === 'ref')
                 continue;
             if (config.hasOwnProperty(propName)) {
@@ -54,113 +105,19 @@ function createElement(type, config, ...children) {
         }
     }
 
+    // copy default props from component
+    if (typeof type === 'function') {
+        let defaultProps = type.defaultProps;
+        if (defaultProps) {
+            for (let prop in defaultProps) {
+                if (props[propName] === 'undefined') {
+                    props[propName] = defaultProps[propName];
+                }
+            }
+        }
+    }
+
     return new Vnode(type, props, key, ref);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* NOTE: replace with virtual node*/
-// function createElement(el, props, ...children) {
-//     return anElement(el, props, children);
-// }
-
-function anElement(element, props, children) {
-    if (isClass(element)) {
-        return handleClass(element, props, children);
-    }
-    else if (isFunc(element)) {
-        return element(props);
-    }
-    else {
-        return handleDOMNode(element, props, children);
-    }
-}
-
-function handleClass(clazz, props, children) {
-    classCounter ++;
-    if(classMap[classCounter]) {
-        return classMap[classCounter];
-    }
-
-    const reactElem = new clazz(props);
-    reactElem.children = children;
-    reactElem.type = REACT_CLASS;
-    classMap[classCounter] = reactElem;
-    // NOTE: return the obj instead of calling render() here
-    return reactElem;
-}
-
-function handleDOMNode(element, props, children) {
-    const anElement = document.createElement(element);
-
-    if ( children !== null ) {
-        children.map((c) => {
-            appendChild(anElement, c);
-        });
-    }
-    // add event listeners or attributes from props
-    for (let propName in props) {
-        appendProp(anElement, propName, props[propName]);
-    }
-    return anElement;
-}
-
-function appendChild(element, child) {
-    if (child.type === 'REACT_CLASS') {
-        appendChild(element, child.render());
-    }
-    else if(Array.isArray(child)) {
-        child.map(ch => {element.appendChild(ch)});
-    }
-    else if(typeof(child) === 'object'){
-        element.appendChild(child);
-    }
-    else {
-        element.innerHTML += child;
-    }
-}
-
-function appendProp(element, propName, propVal) {
-    if (isEvent(propName)) {
-        element.addEventListener(propName.substring(2).toLowerCase(), propVal);
-    }
-    else if (isClassName(propName)) {
-        propName = 'class';
-        element.setAttribute(propName, propVal);
-    }
-    else {
-        element.setAttribute(propName, propVal);
-    }
-}
-
-// class Component {
-//     constructor(props) {
-//         this.props = props;
-//     }
-//     setState (state) {
-//         this.state = Object.assign({}, this.state, state);
-//         reRender();
-//     }
-// }
-
-function reRender() {
-    // delete old dom tree
-    while(rootDOMElement.hasChildNodes()) {
-        rootDOMElement.removeChild(rootDOMElement.lastChild);
-    }
-    // render again
-    classCounter = 1; // skip the root
-    ReactDOM.render(rootReactElement, rootDOMElement);
 }
 
 export default {
