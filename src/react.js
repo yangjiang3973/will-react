@@ -15,7 +15,7 @@ class Vnode {
     }
 }
 
-class Component {
+class Component {  // in Luy, this is called ReactClass in version 0.0.1
     constructor(props) {
         this.props = props;
         this.state = this.state || {}
@@ -23,15 +23,15 @@ class Component {
         this.nextState = null
     }
 
-    setState(partialState) {
+    setState(partialState, callback) {
         const preState = this.state; // store old state
         this.nextState = {...this.state, ...partialState}; // store latest state
         this.state = this.nextState; //update state
 
         const oldVnode = this.Vnode.props.children[0];    // should check all , not use index!!
         const newVnode = this.render().props.children[0];
-        console.log(oldVnode);
-        console.log(newVnode);
+        // console.log(oldVnode);
+        // console.log(newVnode);
         updateComponent(this, oldVnode, newVnode);
     }
 
@@ -50,17 +50,16 @@ class Component {
 function updateComponent(instance, oldVnode, newVnode){
     if (oldVnode.type === newVnode.type) {
         mapProps(oldVnode._hostNode, newVnode.props); // update node
-        console.log(newVnode.props);    // domNode is undefined!!!!
 
     }
     else {
         // remove because of differernt types
+        // remove completely and render again
+        // container.removeChild(), container.appendChild(domNode)
     }
 }
 
 function mapProps(domNode, props){
-    console.log(domNode);    // domNode is undefined!!!!
-
     for (let propsName in props){
         if (propsName === 'children')
             continue;
@@ -69,7 +68,6 @@ function mapProps(domNode, props){
         }
         else if (propsName === 'style') {
             let style = props['style']
-            console.log(style);    // domNode is undefined!!!!
             Object.keys(style).forEach((styleName) => {
                 domNode.style[styleName] = style[styleName];
             });
@@ -106,6 +104,19 @@ function createElement(type, config, ...children) {
             }
         }
     }
+
+    // copy default props from component
+    if (typeof type === 'function') {
+        let defaultProps = type.defaultProps;
+        if (defaultProps) {
+            for (let prop in defaultProps) {
+                if (props[propName] === 'undefined') {
+                    props[propName] = defaultProps[propName];
+                }
+            }
+        }
+    }
+
     return new Vnode(type, props, key, ref);
 }
 

@@ -61,8 +61,9 @@ function mapProps(domNode, props){
         else if (isEvent(propsName)){
             domNode.addEventListener(propsName.substring(2).toLowerCase(), props[propsName]);
         }
-
-        domNode[propsName] = props[propsName];
+        else {
+            domNode[propsName] = props[propsName];
+        }
     }
 }
 
