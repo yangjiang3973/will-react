@@ -15,7 +15,7 @@ function render(Vnode, container) {  // NOTE: 2 kinds of Vnode
         props = VnodeTop.props;
         children = props.children;
         domNode = document.createElement(type);
-        VnodeTop._hostNode = domNode; // for tracing back
+        VnodeTop._hostNode = domNode; // for tracing back  !! NOTE: should store here or Vnode???
     }
     else if(VnodeType === 'string') {
         domNode = document.createElement(type);

@@ -30,9 +30,34 @@ class Component {  // in Luy, this is called ReactClass in version 0.0.1
 
         const oldVnode = this.Vnode.props.children[0];    // should check all , not use index!!
         const newVnode = this.render().props.children[0];
-        // console.log(oldVnode);
-        // console.log(newVnode);
-        updateComponent(this, oldVnode, newVnode);
+        this.Vnode = newVnode;  // important!
+
+        this.updateComponent(oldVnode, newVnode);
+    }
+
+
+    // Note: should move mapProps to utils???
+    // why not call render() again from its parent dom node: render(oldVnode, parentDOMNode)
+    // not efficient!
+
+    // NOTE: update the DOM based on the changes made in the vDOM. This process is also called patching
+    // we're aiming to update the DOM only where it has changed.
+    updateComponent(oldVnode, newVnode){
+        if (oldVnode.type === newVnode.type) {
+            if(typeof oldVnode.type === 'string') {
+                // this is doing sth like mapProps()
+                updateVElement(oldVnode, newVnode);
+                // mapProps(oldVnode._hostNode, newVnode.props); // update node
+
+            }
+
+
+        }
+        else {
+            // remove because of differernt types
+            // remove completely and render again
+            // container.removeChild(), container.appendChild(domNode)
+        }
     }
 
     render() {
@@ -40,22 +65,26 @@ class Component {  // in Luy, this is called ReactClass in version 0.0.1
     }
 }
 
-// Note: should move mapProps to utils???
-// why not call render() again from its parent dom node: render(oldVnode, parentDOMNode)
-// not efficient!
+// this is doing sth like mapProps()
+// only for practise during reading a gitbook
+function updateVElement(oldVnode, newVnode){
+    const dom = oldVnode._hostNode;
+    newVnode.dom = dom;
 
-// NOTE: update the DOM based on the changes made in the vDOM. This process is also called patching
-// we're aiming to update the DOM only where it has changed.
-
-function updateComponent(instance, oldVnode, newVnode){
-    if (oldVnode.type === newVnode.type) {
-        mapProps(oldVnode._hostNode, newVnode.props); // update node
-
+    if (newVnode.props.children.length !== 0) {
+        updateChildren(oldVnode.props.children, newVnode.props.children, dom);
     }
-    else {
-        // remove because of differernt types
-        // remove completely and render again
-        // container.removeChild(), container.appendChild(domNode)
+
+    const newStyle = newVnode.props.style;
+    Object.keys(newStyle).forEach((styleName) => {
+        dom.style[styleName] = newStyle[styleName];
+    });
+}
+
+function updateChildren(oldChildren, newChildren, parentDOMNode) {
+    for (let i=0; i<newChildren.length; i++) {
+        // skip corner cases here, assume they have equal length
+        
     }
 }
 
