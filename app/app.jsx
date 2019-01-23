@@ -88,41 +88,76 @@ import ReactDOM from '../src/reactDOM.js'
 // ReactDOM.render(helloWorld, document.getElementById('root'));
 
 // TEST 5
-class FuckApp extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+// class FuckApp extends React.Component {
+//     constructor(props) {
+//         super(props);
+//     }
+//
+//     state = {
+//         color: 'red'
+//     }
+//
+//     _handleClick = () => {
+//         console.log('cccccc');
+//         const color = ['#eee', 'black', 'red', 'green', 'blue','grey','#133234','#123213','#222345','#998232']
+//         const rand = parseInt(Math.min(10, Math.random() * 10))
+//         console.log(color[rand]);
+//         this.setState({
+//             color: color[rand]
+//         });
+//
+//         // console.log(this);
+//     }
+//
+//     render() {
+//         return (
+//             <div>
+//                 <div
+//                 style={{ height: '100px', width: '100px', background: this.state.color }}
+//                 className='I am FuckApp component' />
+//                 <button onClick={this._handleClick}>'aaa'</button>
+//             </div>
+//         );
+//     }
+// }
+//
+//
+// ReactDOM.render(
+//     <FuckApp />
+//     , document.getElementById('root')
+// );
 
-    state = {
-        color: 'red'
-    }
 
-    _handleClick = () => {
-        console.log('cccccc');
-        const color = ['#eee', 'black', 'red', 'green', 'blue','grey','#133234','#123213','#222345','#998232']
-        const rand = parseInt(Math.min(10, Math.random() * 10))
-        console.log(color[rand]);
-        this.setState({
-            color: color[rand]
-        });
+class C extends React.Component {
+  render() {
+    return (<div>asd</div>)
 
-        // console.log(this);
-    }
-
-    render() {
-        return (
-            <div>
-                <div
-                style={{ height: '100px', width: '100px', background: this.state.color }}
-                className='I am FuckApp component' />
-                <button onClick={this._handleClick}>'aaa'</button>
-            </div>
-        );
-    }
+  }
 }
 
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      counter: 1
+    }
+    setInterval(() => {
+      this.setState({ counter: this.state.counter + 1 })
+    }, 1500);
+  }
+  render() {
+    return (
+      <div key={1} >
+        {this.state.counter%2 ===0 ? <div>1</div> : <C/> }
+        {this.state.counter}
+        {this.state.counter}
+        {this.state.counter}
+      </div>
+    )
+  }
+}
 
 ReactDOM.render(
-    <FuckApp />
-    , document.getElementById('root')
+  <App />,
+  document.getElementById('root')
 );
