@@ -49,11 +49,11 @@ class Component {
 function update(oldVnode, newVnode) {
     if (oldVnode.type === newVnode.type) {
         if (typeof oldVnode.type === 'string') {
-            console.log('update native elem');
+            // console.log('update native elem');
             updateDOMElement(oldVnode, newVnode);
         }
         else if (typeof oldVnode.type === 'function') {
-            console.log('update component elem');
+            // console.log('update component elem');
             updateComponentElement(oldVnode, newVnode);
         }
     }
@@ -83,6 +83,22 @@ function updateDOMElement(oldVnode, newVnode) {
 }
 
 function updateComponentElement(oldVnode, newVnode) {
+    // should compare type! if the same, no need to instantiate again, just change prop!
+
+    // 1. different type
+    // const ComponentClass = newVnode.type;
+    // const { props } = newVnode;
+    // const instance = new ComponentClass(props);
+    // const unwrappedVnode = instance.render();
+
+    // 2. the same type, modify prop directly!
+    // if (oldVnode.type === newVnode.type) {
+    //     const newProps = newVnode.props;
+    //
+    //     oldVnode.props = newProps
+    //     oldVnode.render();
+    //
+    // }
 
 }
 

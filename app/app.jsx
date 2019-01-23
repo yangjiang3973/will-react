@@ -88,6 +88,13 @@ import ReactDOM from '../src/reactDOM.js'
 // ReactDOM.render(helloWorld, document.getElementById('root'));
 
 // TEST 5
+class CCC extends React.Component {
+  render() {
+    return (<div style={{ height: '100px', width: '100px', background: this.props.color }}>asd</div>)
+
+  }
+}
+
 class FuckApp extends React.Component {
     constructor(props) {
         super(props);
@@ -115,7 +122,7 @@ class FuckApp extends React.Component {
                     className='I am FuckApp component'
                 />
                 <button onClick={this._handleClick}>{this.state.color}</button>
-                <div>{this.state.color}</div>
+                <CCC color={this.state.color}/>
             </div>
         );
     }
