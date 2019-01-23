@@ -15,7 +15,7 @@ class Vnode {
     }
 }
 
-class Component {  // in Luy, this is called ReactClass in version 0.0.1
+class Component {
     constructor(props) {
         this.props = props;
         this.state = this.state || {}
@@ -28,11 +28,15 @@ class Component {  // in Luy, this is called ReactClass in version 0.0.1
         this.nextState = {...this.state, ...partialState}; // store latest state
         this.state = this.nextState; //update state
 
-        const oldVnode = this.Vnode.props.children[0];    // should check all , not use index!!
-        const newVnode = this.render().props.children[0];
-        // console.log(oldVnode);
-        // console.log(newVnode);
-        updateComponent(this, oldVnode, newVnode);
+        this.updateComponent();
+    }
+
+    updateComponent(){
+        const oldVnode = this.Vnode;
+        const newVnode = this.render();
+        this.Vnode = newVnode;
+
+        update(oldVnode, newVnode);
     }
 
     render() {
@@ -40,40 +44,58 @@ class Component {  // in Luy, this is called ReactClass in version 0.0.1
     }
 }
 
-// Note: should move mapProps to utils???
-// why not call render() again from its parent dom node: render(oldVnode, parentDOMNode)
-// not efficient!
-
 // NOTE: update the DOM based on the changes made in the vDOM. This process is also called patching
 // we're aiming to update the DOM only where it has changed.
-
-function updateComponent(instance, oldVnode, newVnode){
+function update(oldVnode, newVnode) {
     if (oldVnode.type === newVnode.type) {
-        mapProps(oldVnode._hostNode, newVnode.props); // update node
-
+        if (typeof oldVnode.type === 'string') {
+            console.log('update native elem');
+            updateDOMElement(oldVnode, newVnode);
+        }
+        else if (typeof oldVnode.type === 'function') {
+            console.log('update component elem');
+            updateComponentElement(oldVnode, newVnode);
+        }
     }
     else {
-        // remove because of differernt types
-        // remove completely and render again
-        // container.removeChild(), container.appendChild(domNode)
+        console.log('diff types, remove and mount a new one!');
     }
 }
 
-function mapProps(domNode, props){
-    for (let propsName in props){
-        if (propsName === 'children')
-            continue;
-        else if(isEvent(propsName)){
-            domNode.addEventListener(propsName.substring(2).toLowerCase(), props[propsName]);
+function updateText(oldText, newText, parentDOM) {
+    parentDOM.innerHTML = newText;
+}
+
+function updateDOMElement(oldVnode, newVnode) {
+    let domNode = oldVnode._hostNode;
+
+    if (newVnode.props.children.length > 0) {
+        updateChildren(oldVnode.props.children, newVnode.props.children, domNode);
+    }
+    // patching the dom elem here
+    if (newVnode.props['style']) {
+        let style = newVnode.props['style'];
+        Object.keys(style).forEach((styleName) => {
+            domNode.style[styleName] = style[styleName];
+        });
+    }
+    newVnode._hostNode = domNode;
+}
+
+function updateComponentElement(oldVnode, newVnode) {
+
+}
+
+function updateChildren(oldVnodeChildren, newVnodeChildren, parentNode) {
+    // assume old and new children has the same childrenLength
+    const l = oldVnodeChildren.length;
+    for (let i=0; i<l; i++) {
+        // children may be not Vnode, text actually
+        if (typeof newVnodeChildren[i] === 'string') {
+            updateText(oldVnodeChildren[i], newVnodeChildren[i], parentNode);
         }
-        else if (propsName === 'style') {
-            let style = props['style']
-            Object.keys(style).forEach((styleName) => {
-                domNode.style[styleName] = style[styleName];
-            });
-            continue
-        }
-        domNode[propsName] = props[propsName];
+        else
+            update(oldVnodeChildren[i], newVnodeChildren[i]);
     }
 }
 
