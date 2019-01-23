@@ -48,7 +48,10 @@ class Component {  // in Luy, this is called ReactClass in version 0.0.1
                 // this is doing sth like mapProps()
                 updateVElement(oldVnode, newVnode);
                 // mapProps(oldVnode._hostNode, newVnode.props); // update node
-
+            }
+            else if (typeof oldVnode.type === 'function') {
+                // re-render children component
+                updateVComponent(oldVnode, newVnode);
             }
 
 
@@ -84,7 +87,10 @@ function updateVElement(oldVnode, newVnode){
 function updateChildren(oldChildren, newChildren, parentDOMNode) {
     for (let i=0; i<newChildren.length; i++) {
         // skip corner cases here, assume they have equal length
-        
+        const oldChild = oldChildren[i];
+        const newChild = newChildren[i];
+
+        updateVElement(oldChild, newChild);
     }
 }
 
