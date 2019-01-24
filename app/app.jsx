@@ -89,10 +89,12 @@ import ReactDOM from '../src/reactDOM.js'
 
 // TEST 5
 class CCC extends React.Component {
-  render() {
-    return (<div style={{ height: '100px', width: '100px', background: this.props.color }}>asd</div>)
-
-  }
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return (<div style={{ height: '100px', width: '100px', background: this.props.color }}>asd</div>);
+    }
 }
 
 class FuckApp extends React.Component {
@@ -107,9 +109,11 @@ class FuckApp extends React.Component {
     _handleClick = () => {
         const color = ['#eee', 'black', 'red', 'green', 'blue','grey','#133234','#123213','#222345','#998232']
         const rand = parseInt(Math.min(10, Math.random() * 10))
+        this.checkStatus();
         this.setState({
             color: color[rand]
         });
+        this.checkStatus();
 
         // console.log(this);
     }

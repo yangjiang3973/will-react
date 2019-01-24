@@ -23,19 +23,24 @@ class Component {
         this.nextState = null
     }
 
+    checkStatus() {
+        console.log(this);
+    }
+
     setState(partialState, callback) {
         const preState = this.state; // store old state
         this.nextState = {...this.state, ...partialState}; // store latest state
         this.state = this.nextState; //update state
-
         this.updateComponent();
     }
 
     updateComponent(){
+        // console.log(this.Vnode);
         const oldVnode = this.Vnode;
-        const newVnode = this.render();
+        const newVnode = this.render();   // why new node's C class node has an instance
+        // console.log(newVnode);
+        newVnode._hostNode = oldVnode._hostNode;
         this.Vnode = newVnode;
-
         update(oldVnode, newVnode);
     }
 
@@ -49,11 +54,9 @@ class Component {
 function update(oldVnode, newVnode) {
     if (oldVnode.type === newVnode.type) {
         if (typeof oldVnode.type === 'string') {
-            // console.log('update native elem');
             updateDOMElement(oldVnode, newVnode);
         }
         else if (typeof oldVnode.type === 'function') {
-            // console.log('update component elem');
             updateComponentElement(oldVnode, newVnode);
         }
     }
@@ -83,7 +86,7 @@ function updateDOMElement(oldVnode, newVnode) {
 }
 
 function updateComponentElement(oldVnode, newVnode) {
-    // should compare type! if the same, no need to instantiate again, just change prop!
+    const oldInstance = oldVnode._instance;
 
     // 1. different type
     // const ComponentClass = newVnode.type;
@@ -92,13 +95,19 @@ function updateComponentElement(oldVnode, newVnode) {
     // const unwrappedVnode = instance.render();
 
     // 2. the same type, modify prop directly!
-    // if (oldVnode.type === newVnode.type) {
-    //     const newProps = newVnode.props;
-    //
-    //     oldVnode.props = newProps
-    //     oldVnode.render();
-    //
-    // }
+    if (oldVnode.type === newVnode.type) {
+        const newProps = newVnode.props;
+        // right now, these two nodes are wrapped node
+        oldVnode.props = newProps;
+        const newTopNode = oldInstance.render();  // render with now props
+
+        newVnode._instance = oldInstance;
+        newVnode._instance.Vnode = newTopNode;
+        newVnode._instance.Vnode._hostNode = oldInstance.Vnode._hostNode;
+        // shouldComponentUpdate() need to check first
+        update(oldInstance.Vnode, newTopNode, oldInstance.parentNode);
+
+    }
 
 }
 
@@ -145,6 +154,7 @@ function createElement(type, config, ...children) {
 
     // copy default props from component
     if (typeof type === 'function') {
+        console.log(new Vnode(type, props, key, ref));
         let defaultProps = type.defaultProps;
         if (defaultProps) {
             for (let prop in defaultProps) {
