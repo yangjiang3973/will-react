@@ -87,13 +87,6 @@ function updateDOMElement(oldVnode, newVnode) {
 
 function updateComponentElement(oldVnode, newVnode) {
     const oldInstance = oldVnode._instance;
-    // 1. different type
-    // const ComponentClass = newVnode.type;
-    // const { props } = newVnode;
-    // const instance = new ComponentClass(props);
-    // const unwrappedVnode = instance.render();
-
-    // 2. the same type, modify prop directly!
     if (oldVnode.type === newVnode.type) {
         const newProps = newVnode.props;
         // right now, these two nodes are wrapped node
