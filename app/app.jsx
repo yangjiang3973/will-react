@@ -88,55 +88,55 @@ import ReactDOM from '../src/reactDOM.js'
 // ReactDOM.render(helloWorld, document.getElementById('root'));
 
 // TEST 5
-class CCC extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-    render() {
-        return (<div style={{ height: '100px', width: '100px', background: this.props.color }}>asd</div>);
-    }
-}
-
-class FuckApp extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    state = {
-        color: 'red'
-    }
-
-    _handleClick = () => {
-        const color = ['#eee', 'black', 'red', 'green', 'blue','grey','#133234','#123213','#222345','#998232']
-        const rand = parseInt(Math.min(10, Math.random() * 10))
-        // this.checkStatus();
-        this.setState({
-            color: color[rand]
-        });
-        // this.checkStatus();
-
-        // console.log(this);
-    }
-
-    render() {
-        return (
-            <div>
-                <div
-                    style={{ height: '100px', width: '100px', background: this.state.color }}
-                    className='I am FuckApp component'
-                />
-                <button onClick={this._handleClick}>{this.state.color}</button>
-                <CCC color={this.state.color}/>
-            </div>
-        );
-    }
-}
-
-
-ReactDOM.render(
-    <FuckApp />
-    , document.getElementById('root')
-);
+// class CCC extends React.Component {
+//     constructor(props) {
+//         super(props);
+//     }
+//     render() {
+//         return (<div style={{ height: '100px', width: '100px', background: this.props.color }}>asd</div>);
+//     }
+// }
+//
+// class FuckApp extends React.Component {
+//     constructor(props) {
+//         super(props);
+//     }
+//
+//     state = {
+//         color: 'red'
+//     }
+//
+//     _handleClick = () => {
+//         const color = ['#eee', 'black', 'red', 'green', 'blue','grey','#133234','#123213','#222345','#998232']
+//         const rand = parseInt(Math.min(10, Math.random() * 10))
+//         // this.checkStatus();
+//         this.setState({
+//             color: color[rand]
+//         });
+//         // this.checkStatus();
+//
+//         // console.log(this);
+//     }
+//
+//     render() {
+//         return (
+//             <div>
+//                 <div
+//                     style={{ height: '100px', width: '100px', background: this.state.color }}
+//                     className='I am FuckApp component'
+//                 />
+//                 <button onClick={this._handleClick}>{this.state.color}</button>
+//                 <CCC color={this.state.color}/>
+//             </div>
+//         );
+//     }
+// }
+//
+//
+// ReactDOM.render(
+//     <FuckApp />
+//     , document.getElementById('root')
+// );
 
 
 // class C extends React.Component {
@@ -172,3 +172,30 @@ ReactDOM.render(
 //   <App />,
 //   document.getElementById('root')
 // );
+
+class Hello extends React.Component {
+  constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
+  render() {
+    return (
+            <div>
+                {this.props.children}
+            </div>
+        );
+  }
+}
+
+const helloWorld = (
+    <div>
+        <Hello>
+            <div>Yang</div>
+            <div>jiang</div>
+        </Hello>
+    </div>
+    );
+
+
+ReactDOM.render(helloWorld, document.getElementById('root'));
