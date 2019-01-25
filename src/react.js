@@ -87,7 +87,6 @@ function updateDOMElement(oldVnode, newVnode) {
 
 function updateComponentElement(oldVnode, newVnode) {
     const oldInstance = oldVnode._instance;
-
     // 1. different type
     // const ComponentClass = newVnode.type;
     // const { props } = newVnode;
@@ -98,12 +97,13 @@ function updateComponentElement(oldVnode, newVnode) {
     if (oldVnode.type === newVnode.type) {
         const newProps = newVnode.props;
         // right now, these two nodes are wrapped node
-        oldVnode.props = newProps;
+        oldInstance.props = newProps;
         const newTopNode = oldInstance.render();  // render with now props
 
-        newVnode._instance = oldInstance;
+        newVnode._instance = oldInstance;   // Note: !!!problem here!  make a deep copy?
+        newTopNode._hostNode = oldInstance.Vnode._hostNode;
         newVnode._instance.Vnode = newTopNode;
-        newVnode._instance.Vnode._hostNode = oldInstance.Vnode._hostNode;
+
         // shouldComponentUpdate() need to check first
         update(oldInstance.Vnode, newTopNode, oldInstance.parentNode);
 
@@ -154,7 +154,6 @@ function createElement(type, config, ...children) {
 
     // copy default props from component
     if (typeof type === 'function') {
-        console.log(new Vnode(type, props, key, ref));
         let defaultProps = type.defaultProps;
         if (defaultProps) {
             for (let prop in defaultProps) {

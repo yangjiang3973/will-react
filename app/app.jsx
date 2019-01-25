@@ -109,11 +109,11 @@ class FuckApp extends React.Component {
     _handleClick = () => {
         const color = ['#eee', 'black', 'red', 'green', 'blue','grey','#133234','#123213','#222345','#998232']
         const rand = parseInt(Math.min(10, Math.random() * 10))
-        this.checkStatus();
+        // this.checkStatus();
         this.setState({
             color: color[rand]
         });
-        this.checkStatus();
+        // this.checkStatus();
 
         // console.log(this);
     }
