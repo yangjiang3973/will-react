@@ -268,3 +268,8 @@ function updateComponent(instance, oldVnode, newVnode) {
 
 2. 英文版的setState（）还没彻底理解，结合Luy目前为止，把setState（）写好，
 包括递归function，等等
+------------------------------------2019-01-25---------  commit key: b5ebc02370a45f916f564dc47aad02c8305c5079
+1. 同类型的update写了,下一步开始写不同类型的更新
+可以参考下Luy是怎么做的.
+
+2. 配置下lint或者prettier!学习一次 一直有用!

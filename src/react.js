@@ -1,10 +1,6 @@
 import { isClass, isFunc, isEvent, isClassName} from './react-utils.js';
+import ReactDOM from './reactDOM.js'
 
-let rootDOMElement, rootReactElement;
-const REACT_CLASS = 'REACT_CLASS';
-
-let classCounter = 0;
-const classMap = {};
 
 class Vnode {
     constructor(type, props, key, ref) {
@@ -23,9 +19,9 @@ class Component {
         this.nextState = null
     }
 
-    checkStatus() {
-        console.log(this);
-    }
+    // _checkStatus() {
+    //     console.log(this);
+    // }
 
     setState(partialState, callback) {
         const preState = this.state; // store old state
@@ -34,13 +30,12 @@ class Component {
         this.updateComponent();
     }
 
-    updateComponent(){
-        // console.log(this.Vnode);
+    updateComponent() {
         const oldVnode = this.Vnode;
         const newVnode = this.render();   // why new node's C class node has an instance
-        // console.log(newVnode);
         newVnode._hostNode = oldVnode._hostNode;
         this.Vnode = newVnode;
+        this.nextState = null
         update(oldVnode, newVnode);
     }
 
@@ -51,7 +46,7 @@ class Component {
 
 // NOTE: update the DOM based on the changes made in the vDOM. This process is also called patching
 // we're aiming to update the DOM only where it has changed.
-function update(oldVnode, newVnode) {
+function update(oldVnode, newVnode, parentDOM) {
     if (oldVnode.type === newVnode.type) {
         if (typeof oldVnode.type === 'string') {
             updateDOMElement(oldVnode, newVnode);
@@ -62,6 +57,19 @@ function update(oldVnode, newVnode) {
     }
     else {
         console.log('diff types, remove and mount a new one!');
+        // 2 cases, new type is native dom or Component
+        if (typeof newVnode.type === 'string') {
+            // oldVnode is a classWrapper
+            newVnode._hostNode = oldVnode._instance.Vnode._hostNode; //save old dom node to remove.
+            ReactDOM.render(newVnode, parentDOM, true);
+        }
+        else if (typeof newVnode.type === 'function') {
+            newVnode._hostNode = oldVnode._hostNode;
+            ReactDOM.render(newVnode, parentDOM, true);
+        }
+        else {
+            console.error('wrong type of Vnode');
+        }
     }
 }
 
@@ -87,25 +95,22 @@ function updateDOMElement(oldVnode, newVnode) {
 
 function updateComponentElement(oldVnode, newVnode) {
     const oldInstance = oldVnode._instance;
-    if (oldVnode.type === newVnode.type) {
-        const newProps = newVnode.props;
-        // right now, these two nodes are wrapped node
-        oldInstance.props = newProps;
-        const newTopNode = oldInstance.render();  // render with now props
+    const newProps = newVnode.props;
+    // right now, these two nodes are wrapped node
+    oldInstance.props = newProps;
+    const newTopNode = oldInstance.render();  // render with now props after changing props
 
-        newVnode._instance = oldInstance;   // Note: !!!problem here!  make a deep copy?
-        newTopNode._hostNode = oldInstance.Vnode._hostNode;
-        newVnode._instance.Vnode = newTopNode;
+    newVnode._instance = oldInstance;   // Note: !!!problem here!  make a deep copy?
+    newTopNode._hostNode = oldInstance.Vnode._hostNode;
+    newVnode._instance.Vnode = newTopNode;
 
-        // shouldComponentUpdate() need to check first
-        update(oldInstance.Vnode, newTopNode, oldInstance.parentNode);
-
-    }
-
+    // shouldComponentUpdate() need to check first
+    update(oldInstance.Vnode, newTopNode, oldInstance.parentNode);
 }
 
 function updateChildren(oldVnodeChildren, newVnodeChildren, parentNode) {
-    // assume old and new children has the same childrenLength
+    console.log
+    // TODO: assume old and new children has the same childrenLength
     const l = oldVnodeChildren.length;
     for (let i=0; i<l; i++) {
         // children may be not Vnode, text actually
@@ -113,7 +118,7 @@ function updateChildren(oldVnodeChildren, newVnodeChildren, parentNode) {
             updateText(oldVnodeChildren[i], newVnodeChildren[i], parentNode);
         }
         else
-            update(oldVnodeChildren[i], newVnodeChildren[i]);
+            update(oldVnodeChildren[i], newVnodeChildren[i], parentNode);
     }
 }
 
