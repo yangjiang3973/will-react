@@ -273,3 +273,7 @@ function updateComponent(instance, oldVnode, newVnode) {
 可以参考下Luy是怎么做的.
 
 2. 配置下lint或者prettier!学习一次 一直有用!
+
+-----------------------------------2019-02-26-------- commit key: a30b97f50d1194c80a704d37c1c84947429accf2
+1. 不同类型的更新搞定了
+2. 开始看下如何加上key???
