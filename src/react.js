@@ -19,9 +19,9 @@ class Component {
         this.nextState = null
     }
 
-    checkStatus() {
-        console.log(this);
-    }
+    // _checkStatus() {
+    //     console.log(this);
+    // }
 
     setState(partialState, callback) {
         const preState = this.state; // store old state
@@ -31,13 +31,11 @@ class Component {
     }
 
     updateComponent() {
-        // console.log(this.Vnode);
         const oldVnode = this.Vnode;
         const newVnode = this.render();   // why new node's C class node has an instance
-        // console.log(newVnode);
         newVnode._hostNode = oldVnode._hostNode;
         this.Vnode = newVnode;
-         this.nextState = null
+        this.nextState = null
         update(oldVnode, newVnode);
     }
 
@@ -48,7 +46,7 @@ class Component {
 
 // NOTE: update the DOM based on the changes made in the vDOM. This process is also called patching
 // we're aiming to update the DOM only where it has changed.
-function update(oldVnode, newVnode) {
+function update(oldVnode, newVnode, parentDOM) {
     if (oldVnode.type === newVnode.type) {
         if (typeof oldVnode.type === 'string') {
             updateDOMElement(oldVnode, newVnode);
@@ -61,12 +59,13 @@ function update(oldVnode, newVnode) {
         console.log('diff types, remove and mount a new one!');
         // 2 cases, new type is native dom or Component
         if (typeof newVnode.type === 'string') {
-            // TODO
-            const parentElem = oldVnode._hostNode.parentNode;
-            ReactDOM.render(newVnode, parentElem, true);
+            // oldVnode is a classWrapper
+            newVnode._hostNode = oldVnode._instance.Vnode._hostNode; //save old dom node to remove.
+            ReactDOM.render(newVnode, parentDOM, true);
         }
         else if (typeof newVnode.type === 'function') {
-
+            newVnode._hostNode = oldVnode._hostNode;
+            ReactDOM.render(newVnode, parentDOM, true);
         }
         else {
             console.error('wrong type of Vnode');
@@ -99,7 +98,7 @@ function updateComponentElement(oldVnode, newVnode) {
     const newProps = newVnode.props;
     // right now, these two nodes are wrapped node
     oldInstance.props = newProps;
-    const newTopNode = oldInstance.render();  // render with now props
+    const newTopNode = oldInstance.render();  // render with now props after changing props
 
     newVnode._instance = oldInstance;   // Note: !!!problem here!  make a deep copy?
     newTopNode._hostNode = oldInstance.Vnode._hostNode;
@@ -110,6 +109,7 @@ function updateComponentElement(oldVnode, newVnode) {
 }
 
 function updateChildren(oldVnodeChildren, newVnodeChildren, parentNode) {
+    console.log
     // TODO: assume old and new children has the same childrenLength
     const l = oldVnodeChildren.length;
     for (let i=0; i<l; i++) {
@@ -118,7 +118,7 @@ function updateChildren(oldVnodeChildren, newVnodeChildren, parentNode) {
             updateText(oldVnodeChildren[i], newVnodeChildren[i], parentNode);
         }
         else
-            update(oldVnodeChildren[i], newVnodeChildren[i]);
+            update(oldVnodeChildren[i], newVnodeChildren[i], parentNode);
     }
 }
 

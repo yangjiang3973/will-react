@@ -96,7 +96,7 @@ import ReactDOM from '../src/reactDOM.js'
 //         return (<div style={{ height: '100px', width: '100px', background: this.props.color }}>asd</div>);
 //     }
 // }
-//
+// //
 // class FuckApp extends React.Component {
 //     constructor(props) {
 //         super(props);
@@ -109,13 +109,9 @@ import ReactDOM from '../src/reactDOM.js'
 //     _handleClick = () => {
 //         const color = ['#eee', 'black', 'red', 'green', 'blue','grey','#133234','#123213','#222345','#998232']
 //         const rand = parseInt(Math.min(10, Math.random() * 10))
-//         // this.checkStatus();
 //         this.setState({
 //             color: color[rand]
 //         });
-//         // this.checkStatus();
-//
-//         // console.log(this);
 //     }
 //
 //     render() {
@@ -189,28 +185,15 @@ class App extends React.Component {
       const rand = parseInt(Math.min(10, Math.random() * 10))
       this.setState({
           color: color[rand],
-          counter: this.state.counter + 1;
+          counter: this.state.counter + 1,
       });
   }
 
   render() {
     return (
       <div key={1} >
-        {this.state.counter%2 ===0 ? <div>1</div> : <C/> }
-        {this.state.counter}
-        {this.state.counter}
-        {this.state.counter}
-
-        <div
-            style={{ height: '100px', width: '100px', background: this.state.color }}
-            className='I am FuckApp component'
-        />
+        {this.state.counter%2 === 0 ? <div>native dom here</div> : <CCC color={this.state.color}/> }
         <button onClick={this._handleClick}>{this.state.color}</button>
-        <CCC color={this.state.color}/>
-        {this.state.counter%2 ===0 ? <div>1</div> : <C/> }
-        {this.state.counter}
-        {this.state.counter}
-        {this.state.counter}
       </div>
     )
   }
@@ -222,7 +205,7 @@ ReactDOM.render(
 );
 
 
-//
+
 // ReactDOM.render(
 //     <FuckApp />
 //     , document.getElementById('root')

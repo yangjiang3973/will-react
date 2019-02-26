@@ -1,6 +1,6 @@
 import { isClass, isFunc, isEvent, isClassName} from './react-utils.js';
 
-function render(Vnode, container) {  // NOTE: 2 kinds of Vnode
+function render(Vnode, container, isUpdate) {  // NOTE: 2 kinds of Vnode
     if (!Vnode) return;
     let { type, props } = Vnode;
     if (!type) return;
@@ -15,10 +15,16 @@ function render(Vnode, container) {  // NOTE: 2 kinds of Vnode
         props = VnodeTop.props;
         children = props.children;
         domNode = document.createElement(type);
+        if(isUpdate) {
+            container.removeChild(Vnode._hostNode);
+        }
         VnodeTop._hostNode = domNode; // for tracing back
     }
     else if(VnodeType === 'string') {
         domNode = document.createElement(type);
+        if(isUpdate) {
+            container.removeChild(Vnode._hostNode);
+        }
         Vnode._hostNode = domNode;
     }
 
