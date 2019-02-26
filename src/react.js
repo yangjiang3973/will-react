@@ -1,10 +1,6 @@
 import { isClass, isFunc, isEvent, isClassName} from './react-utils.js';
+import ReactDOM from './reactDOM.js'
 
-let rootDOMElement, rootReactElement;
-const REACT_CLASS = 'REACT_CLASS';
-
-let classCounter = 0;
-const classMap = {};
 
 class Vnode {
     constructor(type, props, key, ref) {
@@ -34,13 +30,14 @@ class Component {
         this.updateComponent();
     }
 
-    updateComponent(){
+    updateComponent() {
         // console.log(this.Vnode);
         const oldVnode = this.Vnode;
         const newVnode = this.render();   // why new node's C class node has an instance
         // console.log(newVnode);
         newVnode._hostNode = oldVnode._hostNode;
         this.Vnode = newVnode;
+         this.nextState = null
         update(oldVnode, newVnode);
     }
 
@@ -62,6 +59,18 @@ function update(oldVnode, newVnode) {
     }
     else {
         console.log('diff types, remove and mount a new one!');
+        // 2 cases, new type is native dom or Component
+        if (typeof newVnode.type === 'string') {
+            // TODO
+            const parentElem = oldVnode._hostNode.parentNode;
+            ReactDOM.render(newVnode, parentElem, true);
+        }
+        else if (typeof newVnode.type === 'function') {
+
+        }
+        else {
+            console.error('wrong type of Vnode');
+        }
     }
 }
 
@@ -87,25 +96,21 @@ function updateDOMElement(oldVnode, newVnode) {
 
 function updateComponentElement(oldVnode, newVnode) {
     const oldInstance = oldVnode._instance;
-    if (oldVnode.type === newVnode.type) {
-        const newProps = newVnode.props;
-        // right now, these two nodes are wrapped node
-        oldInstance.props = newProps;
-        const newTopNode = oldInstance.render();  // render with now props
+    const newProps = newVnode.props;
+    // right now, these two nodes are wrapped node
+    oldInstance.props = newProps;
+    const newTopNode = oldInstance.render();  // render with now props
 
-        newVnode._instance = oldInstance;   // Note: !!!problem here!  make a deep copy?
-        newTopNode._hostNode = oldInstance.Vnode._hostNode;
-        newVnode._instance.Vnode = newTopNode;
+    newVnode._instance = oldInstance;   // Note: !!!problem here!  make a deep copy?
+    newTopNode._hostNode = oldInstance.Vnode._hostNode;
+    newVnode._instance.Vnode = newTopNode;
 
-        // shouldComponentUpdate() need to check first
-        update(oldInstance.Vnode, newTopNode, oldInstance.parentNode);
-
-    }
-
+    // shouldComponentUpdate() need to check first
+    update(oldInstance.Vnode, newTopNode, oldInstance.parentNode);
 }
 
 function updateChildren(oldVnodeChildren, newVnodeChildren, parentNode) {
-    // assume old and new children has the same childrenLength
+    // TODO: assume old and new children has the same childrenLength
     const l = oldVnodeChildren.length;
     for (let i=0; i<l; i++) {
         // children may be not Vnode, text actually

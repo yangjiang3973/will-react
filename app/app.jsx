@@ -138,64 +138,92 @@ import ReactDOM from '../src/reactDOM.js'
 //     , document.getElementById('root')
 // );
 
-
-// class C extends React.Component {
-//   render() {
-//     return (<div>asd</div>)
-//
-//   }
-// }
-//
-// class App extends React.Component {
-//   constructor() {
-//     super()
-//     this.state = {
-//       counter: 1
+// TEST 6
+// class Hello extends React.Component {
+//   constructor(props) {
+//         super(props);
+//         this.state = {};
 //     }
-//     setInterval(() => {
-//       this.setState({ counter: this.state.counter + 1 })
-//     }, 1500);
-//   }
+//
 //   render() {
 //     return (
-//       <div key={1} >
-//         {this.state.counter%2 ===0 ? <div>1</div> : <C/> }
-//         {this.state.counter}
-//         {this.state.counter}
-//         {this.state.counter}
-//       </div>
-//     )
+//             <div>
+//                 {this.props.children}
+//             </div>
+//         );
 //   }
 // }
 //
-// ReactDOM.render(
-//   <App />,
-//   document.getElementById('root')
-// );
+// const helloWorld = (
+//     <div>
+//         <Hello>
+//             <div>Yang</div>
+//             <div>jiang</div>
+//         </Hello>
+//     </div>
+//     );
+//
+//
+// ReactDOM.render(helloWorld, document.getElementById('root'));
 
-class Hello extends React.Component {
-  constructor(props) {
+class CCC extends React.Component {
+    constructor(props) {
         super(props);
-        this.state = {};
     }
+    render() {
+        return (<div style={{ height: '100px', width: '100px', background: this.props.color }}>asd</div>);
+    }
+}
+
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      counter: 1,
+      color: 'red'
+    }
+  }
+
+  _handleClick = () => {
+      const color = ['#eee', 'black', 'red', 'green', 'blue','grey','#133234','#123213','#222345','#998232']
+      const rand = parseInt(Math.min(10, Math.random() * 10))
+      this.setState({
+          color: color[rand],
+          counter: this.state.counter + 1;
+      });
+  }
 
   render() {
     return (
-            <div>
-                {this.props.children}
-            </div>
-        );
+      <div key={1} >
+        {this.state.counter%2 ===0 ? <div>1</div> : <C/> }
+        {this.state.counter}
+        {this.state.counter}
+        {this.state.counter}
+
+        <div
+            style={{ height: '100px', width: '100px', background: this.state.color }}
+            className='I am FuckApp component'
+        />
+        <button onClick={this._handleClick}>{this.state.color}</button>
+        <CCC color={this.state.color}/>
+        {this.state.counter%2 ===0 ? <div>1</div> : <C/> }
+        {this.state.counter}
+        {this.state.counter}
+        {this.state.counter}
+      </div>
+    )
   }
 }
 
-const helloWorld = (
-    <div>
-        <Hello>
-            <div>Yang</div>
-            <div>jiang</div>
-        </Hello>
-    </div>
-    );
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+);
 
 
-ReactDOM.render(helloWorld, document.getElementById('root'));
+//
+// ReactDOM.render(
+//     <FuckApp />
+//     , document.getElementById('root')
+// );
