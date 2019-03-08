@@ -140,8 +140,12 @@ function updateChildren(oldVnodeChildren, newVnodeChildren, parentNode) {
                 nodesToRemove.push(oldnode);
             }
         });
+
+
+        // TODO: finish the key update
     }
 
+    // no key, normal update
     else{
         for (let i=0; i<l; i++) {
             // children may be not Vnode, text actually
