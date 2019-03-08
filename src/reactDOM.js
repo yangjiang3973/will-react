@@ -1,6 +1,11 @@
 import { isClass, isFunc, isEvent, isClassName} from './react-utils.js';
 
+let mountIndex = 0;
+
 function render(Vnode, container, isUpdate) {  // NOTE: 2 kinds of Vnode
+    mountIndex++;
+    Vnode._mountIndex = mountIndex;
+
     if (!Vnode) return;
     let { type, props } = Vnode;
     if (!type) return;

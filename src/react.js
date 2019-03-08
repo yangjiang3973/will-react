@@ -109,16 +109,49 @@ function updateComponentElement(oldVnode, newVnode) {
 }
 
 function updateChildren(oldVnodeChildren, newVnodeChildren, parentNode) {
-    console.log
     // TODO: assume old and new children has the same childrenLength
     const l = oldVnodeChildren.length;
-    for (let i=0; i<l; i++) {
-        // children may be not Vnode, text actually
-        if (typeof newVnodeChildren[i] === 'string') {
-            updateText(oldVnodeChildren[i], newVnodeChildren[i], parentNode);
+
+    // this level's nodes all have keys or none has keys(2 cases)
+    // when both has key(list doms)
+    if (oldVnodeChildren[0].key!==null && newVnodeChildren[0].key!==null) {
+        let oldHash = {};  // store all old vnode keys(if exists)
+        let newHash = {};
+        let nodesToUpdate = [];
+        let nodesToAdd = [];
+        let nodesToRemove = [];
+
+        oldVnodeChildren.forEach((oldnode) => {
+            oldHash[oldnode.key] = oldnode;
+        });
+
+        newVnodeChildren.forEach((newnode, index) => {
+            newHash[newnode.key] = newnode;
+            if(oldHash[newnode.key]) {
+                nodesToUpdate.push(newnode);
+            }
+            else{
+                nodesToAdd.push({Vnode: newnode, index: index});  // index is important
+            }
+        });
+
+        oldVnodeChildren.forEach((oldnode, index) =>{
+            if(!newHash[oldnode.key]) {
+                nodesToRemove.push(oldnode);
+            }
+        });
+    }
+
+    else{
+        for (let i=0; i<l; i++) {
+            // children may be not Vnode, text actually
+            if (typeof newVnodeChildren[i] === 'string') {
+                updateText(oldVnodeChildren[i], newVnodeChildren[i], parentNode);
+            }
+            else{
+                update(oldVnodeChildren[i], newVnodeChildren[i], parentNode);
+            }
         }
-        else
-            update(oldVnodeChildren[i], newVnodeChildren[i], parentNode);
     }
 }
 
