@@ -39,6 +39,16 @@ class Component {
         update(oldVnode, newVnode);
     }
 
+    // 8 lifecycle functions
+    shouldComponentUpdate(){}
+    componentWillReceiveProps(){}
+    componentWillUpdate(){}
+    componentDidUpdate(){}
+    componentWillMount(){}
+    componentDidMount(){}
+    componentWillUnmount(){}
+    componentDidUnmount(){}
+
     render() {
         // TODO
     }
