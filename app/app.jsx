@@ -162,14 +162,48 @@ import ReactDOM from '../src/reactDOM.js'
 //
 // ReactDOM.render(helloWorld, document.getElementById('root'));
 
-class CCC extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-    render() {
-        return (<div style={{ height: '100px', width: '100px', background: this.props.color }}>asd</div>);
-    }
-}
+// class CCC extends React.Component {
+//     constructor(props) {
+//         super(props);
+//     }
+//     render() {
+//         return (<div style={{ height: '100px', width: '100px', background: this.props.color }}>asd</div>);
+//     }
+// }
+//
+// class App extends React.Component {
+//   constructor() {
+//     super()
+//     this.state = {
+//       counter: 1,
+//       color: 'red'
+//     }
+//   }
+//
+//   _handleClick = () => {
+//       const color = ['#eee', 'black', 'red', 'green', 'blue','grey','#133234','#123213','#222345','#998232']
+//       const rand = parseInt(Math.min(10, Math.random() * 10))
+//       this.setState({
+//           color: color[rand],
+//           counter: this.state.counter + 1,
+//       });
+//   }
+//
+//   render() {
+//     return (
+//       <div key={1} >
+//         {this.state.counter%2 === 0 ? <div>native dom here</div> : <CCC color={this.state.color}/> }
+//         <button onClick={this._handleClick}>{this.state.color}</button>
+//       </div>
+//     )
+//   }
+// }
+//
+// ReactDOM.render(
+//   <App />,
+//   document.getElementById('root')
+// );
+
 
 class App extends React.Component {
   constructor() {
@@ -189,10 +223,33 @@ class App extends React.Component {
       });
   }
 
+
   render() {
+    let A = (
+        <div>
+            {/* <div key='a'> 1 </div> */}
+            <div> 2
+                <span>aaaa</span>
+            </div>
+            {/* <div key='c'> 3 </div> */}
+        </div>
+    );
+
+    let B = (
+        <div>
+            {/* <div key='x'> 0 </div> */}
+            <div> 2222
+                <span>aaaa</span>
+            </div>
+            {/* <div key='f'> 2.1 </div>
+            <div key='q'> 2.2 </div>
+            <div key='d'> 4 </div>
+            <div key='e'> 5 </div> */}
+        </div>
+    );
     return (
       <div key={1} >
-        {this.state.counter%2 === 0 ? <div>native dom here</div> : <CCC color={this.state.color}/> }
+        {this.state.counter%2 !== 0 ? A : B }
         <button onClick={this._handleClick}>{this.state.color}</button>
       </div>
     )
@@ -203,10 +260,3 @@ ReactDOM.render(
   <App />,
   document.getElementById('root')
 );
-
-
-
-// ReactDOM.render(
-//     <FuckApp />
-//     , document.getElementById('root')
-// );

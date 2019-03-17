@@ -1,6 +1,11 @@
 import { isClass, isFunc, isEvent, isClassName} from './react-utils.js';
 
+let mountIndex = 0;
+
 function render(Vnode, container, isUpdate) {  // NOTE: 2 kinds of Vnode
+    mountIndex++;
+    Vnode._mountIndex = mountIndex;
+
     if (!Vnode) return;
     let { type, props } = Vnode;
     if (!type) return;
@@ -73,7 +78,7 @@ function mapProps(domNode, props){
     }
 }
 
-function renderComponent(VnodeWrapper, parentNode) {  //
+function renderComponent(VnodeWrapper, parentElem) {  //
     const ComponentClass = VnodeWrapper.type;
     const { props } = VnodeWrapper;
     const instance = new ComponentClass(props);
@@ -81,7 +86,7 @@ function renderComponent(VnodeWrapper, parentNode) {  //
 
     VnodeWrapper._instance = instance;
     instance.Vnode = unwrappedVnode; // store Vnode into the instance for recording
-    instance.parentNode = parentNode; // store parent dom node for use
+    instance.parentElem = parentElem; // store parent dom node for use
 
     return unwrappedVnode;
 }

@@ -105,20 +105,74 @@ function updateComponentElement(oldVnode, newVnode) {
     newVnode._instance.Vnode = newTopNode;
 
     // shouldComponentUpdate() need to check first
-    update(oldInstance.Vnode, newTopNode, oldInstance.parentNode);
+    update(oldInstance.Vnode, newTopNode, oldInstance.parentElem);
 }
 
-function updateChildren(oldVnodeChildren, newVnodeChildren, parentNode) {
-    console.log
+function updateChildren(oldVnodeChildren, newVnodeChildren, parentElem) {
     // TODO: assume old and new children has the same childrenLength
     const l = oldVnodeChildren.length;
-    for (let i=0; i<l; i++) {
-        // children may be not Vnode, text actually
-        if (typeof newVnodeChildren[i] === 'string') {
-            updateText(oldVnodeChildren[i], newVnodeChildren[i], parentNode);
+
+    // this level's nodes all have keys or none has keys(2 cases)
+    // when both has key(list doms)
+    if (oldVnodeChildren[0].key!=null && newVnodeChildren[0].key!=null) {  // `!=null` also include undefine
+        let oldHash = {};  // store all old vnode keys(if exists) and new mounted ones
+        let nodesToUpdate = {};  // nodes with the same key: {key: newnode}
+
+        oldVnodeChildren.forEach((oldnode) => {
+            oldHash[oldnode.key] = oldnode;
+        });
+
+        // build common nodes
+        newVnodeChildren.forEach((newnode, index) => {
+            if(oldHash[newnode.key]) {
+                nodesToUpdate[newnode.key] = newnode;
+            }
+        });
+
+        // 1. loop through newnodes to add(r to l)
+        for(let i=newVnodeChildren.length-1; i>=0; i--){
+            const cur = newVnodeChildren[i];
+            if (nodesToUpdate[cur.key]) continue;
+            else {
+                const anchorIndex = i + 1;
+                cur._hostNode = ReactDOM.render(cur, parentElem, false);
+                // the last node
+                if (anchorIndex === newVnodeChildren.length) {
+                    parentElem.appendChild(cur._hostNode);
+                }
+                else {
+                    parentElem.insertBefore(cur._hostNode, oldHash[newVnodeChildren[anchorIndex].key]._hostNode);
+                }
+                oldHash[cur.key]=cur;
+            }
         }
-        else
-            update(oldVnodeChildren[i], newVnodeChildren[i], parentNode);
+
+        // 2. loop through oldnodes to remove(default order to loop)
+        for(let j=0; j<oldVnodeChildren.length; j++) {
+            const cur = oldVnodeChildren[j]
+            if (nodesToUpdate[cur.key]) continue;
+            else {
+                parentElem.removeChild(cur._hostNode);
+            }
+        }
+        // 3. loop through nodesToUpdate
+        Object.keys(nodesToUpdate).forEach((key) => {
+            update(oldHash[key], nodesToUpdate[key], parentElem);
+        });
+    }
+
+    // no key, normal update
+    else{
+        for (let i=0; i<l; i++) {
+            // children may be not Vnode, text actually
+            if (typeof newVnodeChildren[i] === 'string') {
+                updateText(oldVnodeChildren[i], newVnodeChildren[i], parentElem);
+            }
+            else{
+                console.log(oldVnodeChildren[i]);
+                update(oldVnodeChildren[i], newVnodeChildren[i], parentElem);
+            }
+        }
     }
 }
 
