@@ -286,3 +286,15 @@ function updateComponent(instance, oldVnode, newVnode) {
 ----------------------------------2019-03-07--------commit key: 5088a0e9663916673c1c740d13b042933b743751
 1. 感觉Luy里处理key更新,写的思路并不怎么样,需要仔细思考下如何抽象.
 2. 6eb43688159dce9b1319bf005b3c780849960174 开始生命周期
+
+----------------------------------2019-03-17--------commit key： 6eb43688159dce9b1319bf005b3c780849960174
+1. key的增删改写完了
+2. 发现了一个bug， updateText（）里不能直接innerHTML， innerHTML不止包含了text，还有与text兄弟的节点，一改chuildren没了
+比如：<div> 2222
+        <span>aaaa</span>
+    </div>
+我也需要Luy里的flattenChildren（）？？
+不然text与elem并列，且text在前的就出事了。
+
+----------------------------------2019-03-17--------commit key： 6eb43688159dce9b1319bf005b3c780849960174
+1. 暂时忽略细节，继续生命周期吧。
