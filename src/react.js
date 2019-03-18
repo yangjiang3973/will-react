@@ -1,6 +1,5 @@
-import { isClass, isFunc, isEvent, isClassName} from './react-utils.js';
+import { isClass, isFunc, isEvent, isClassName, ComponentLifecycle} from './react-utils.js';
 import ReactDOM from './reactDOM.js'
-
 
 class Vnode {
     constructor(type, props, key, ref) {
@@ -14,9 +13,11 @@ class Vnode {
 class Component {
     constructor(props) {
         this.props = props;
-        this.state = this.state || {}
+        this.state = this.state || {};
 
-        this.nextState = null
+        this.nextState = null;
+
+        this.lifecycle = ComponentLifecycle.CREATE;
     }
 
     // _checkStatus() {
@@ -24,10 +25,15 @@ class Component {
     // }
 
     setState(partialState, callback) {
-        const preState = this.state; // store old state
-        this.nextState = {...this.state, ...partialState}; // store latest state
-        this.state = this.nextState; //update state
-        this.updateComponent();
+        if(this.lifecycle === ComponentLifecycle.CREATE) {
+            // before mounting
+        }
+        else {
+            const preState = this.state; // store old state
+            this.nextState = {...this.state, ...partialState}; // store latest state
+            this.state = this.nextState; //update state
+            this.updateComponent();
+        }
     }
 
     updateComponent() {

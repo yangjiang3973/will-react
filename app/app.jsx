@@ -214,6 +214,14 @@ class App extends React.Component {
     }
   }
 
+  componentWillMount() {
+      console.log('componentWillMount!');
+  }
+
+  componentDidMount() {
+      console.log('componentDidMount!');
+  }
+
   _handleClick = () => {
       const color = ['#eee', 'black', 'red', 'green', 'blue','grey','#133234','#123213','#222345','#998232']
       const rand = parseInt(Math.min(10, Math.random() * 10))
