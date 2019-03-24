@@ -204,53 +204,122 @@ import ReactDOM from '../src/reactDOM.js'
 //   document.getElementById('root')
 // );
 
+/* Test list with keys */
+// class App extends React.Component {
+//   constructor() {
+//     super()
+//     this.state = {
+//       counter: 1,
+//       color: 'red'
+//     }
+//   }
+//
+//   componentWillMount() {
+//       console.log('componentWillMount!');
+//   }
+//
+//   componentDidMount() {
+//       console.log('componentDidMount!');
+//   }
+//
+//   _handleClick = () => {
+//       const color = ['#eee', 'black', 'red', 'green', 'blue','grey','#133234','#123213','#222345','#998232']
+//       const rand = parseInt(Math.min(10, Math.random() * 10))
+//       this.setState({
+//           color: color[rand],
+//           counter: this.state.counter + 1,
+//       });
+//   }
+//
+//
+//   render() {
+//     let A = (
+//         <div>
+//             {/* <div key='a'> 1 </div> */}
+//             <div> 2
+//                 <span>aaaa</span>
+//             </div>
+//             {/* <div key='c'> 3 </div> */}
+//         </div>
+//     );
+//
+//     let B = (
+//         <div>
+//             {/* <div key='x'> 0 </div> */}
+//             <div> 2222
+//                 <span>aaaa</span>
+//             </div>
+//             {/* <div key='f'> 2.1 </div>
+//             <div key='q'> 2.2 </div>
+//             <div key='d'> 4 </div>
+//             <div key='e'> 5 </div> */}
+//         </div>
+//     );
+//     return (
+//       <div key={1} >
+//         {this.state.counter%2 !== 0 ? A : B }
+//         <button onClick={this._handleClick}>{this.state.color}</button>
+//       </div>
+//     )
+//   }
+// }
 
-class App extends React.Component {
-  constructor() {
-    super()
+
+
+class C extends React.Component {
+  constructor(props) {
+    super(props)
+
     this.state = {
-      counter: 1,
-      color: 'red'
+      c: 100,
+    }
+
+  }
+
+  handleClick = (e) => {
+    this.setState({
+      c: this.state.c + 1
+    })
+  }
+
+  render() {
+    return (
+      <div>
+        <button>{this.props.name}</button>
+      </div>)
+
+  }
+}
+
+export default class App extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      counter: '2'
     }
   }
 
-  _handleClick = () => {
-      const color = ['#eee', 'black', 'red', 'green', 'blue','grey','#133234','#123213','#222345','#998232']
-      const rand = parseInt(Math.min(10, Math.random() * 10))
-      this.setState({
-          color: color[rand],
-          counter: this.state.counter + 1,
-      });
+  componentWillMount() {
+    console.log('将要挂载')
+
   }
 
+  componentDidMount() {
+    console.log('组件挂载')
+  }
+
+  handleClick = (e) => {
+      this.setState({
+          counter: this.state.counter === '2' ? 'a' : '2',
+        });
+  }
 
   render() {
-    let A = (
-        <div>
-            {/* <div key='a'> 1 </div> */}
-            <div> 2
-                <span>aaaa</span>
-            </div>
-            {/* <div key='c'> 3 </div> */}
-        </div>
-    );
-
-    let B = (
-        <div>
-            {/* <div key='x'> 0 </div> */}
-            <div> 2222
-                <span>aaaa</span>
-            </div>
-            {/* <div key='f'> 2.1 </div>
-            <div key='q'> 2.2 </div>
-            <div key='d'> 4 </div>
-            <div key='e'> 5 </div> */}
-        </div>
-    );
     return (
-      <div key={1} >
-        {this.state.counter%2 !== 0 ? A : B }
-        <button onClick={this._handleClick}>{this.state.color}</button>
+      <div key={1}>
+        <button onClick={this.handleClick}>{this.state.counter}</button>
+        <C name={this.state.counter} />
       </div>
     )
   }

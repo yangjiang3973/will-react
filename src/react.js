@@ -1,6 +1,5 @@
-import { isClass, isFunc, isEvent, isClassName} from './react-utils.js';
+import { isClass, isFunc, isEvent, isClassName, ComponentLifecycle} from './react-utils.js';
 import ReactDOM from './reactDOM.js'
-
 
 class Vnode {
     constructor(type, props, key, ref) {
@@ -14,9 +13,11 @@ class Vnode {
 class Component {
     constructor(props) {
         this.props = props;
-        this.state = this.state || {}
+        this.state = this.state || {};
 
-        this.nextState = null
+        this.nextState = null;
+
+        this.lifecycle = ComponentLifecycle.CREATE;
     }
 
     // _checkStatus() {
@@ -24,10 +25,16 @@ class Component {
     // }
 
     setState(partialState, callback) {
-        const preState = this.state; // store old state
-        this.nextState = {...this.state, ...partialState}; // store latest state
-        this.state = this.nextState; //update state
-        this.updateComponent();
+        if(this.lifecycle === ComponentLifecycle.CREATE) {
+            // before mounting
+        }
+        else {
+            // updating stage
+            const preState = this.state; // store old state
+            this.nextState = {...this.state, ...partialState}; // store latest state
+            this.state = this.nextState; //update state
+            this.updateComponent();
+        }
     }
 
     updateComponent() {
@@ -66,7 +73,6 @@ function update(oldVnode, newVnode, parentDOM) {
         }
     }
     else {
-        console.log('diff types, remove and mount a new one!');
         // 2 cases, new type is native dom or Component
         if (typeof newVnode.type === 'string') {
             // oldVnode is a classWrapper
@@ -104,18 +110,21 @@ function updateDOMElement(oldVnode, newVnode) {
 }
 
 function updateComponentElement(oldVnode, newVnode) {
-    const oldInstance = oldVnode._instance;
+    const newComponentClass = newVnode.type;
     const newProps = newVnode.props;
-    // right now, these two nodes are wrapped node
-    oldInstance.props = newProps;
-    const newTopNode = oldInstance.render();  // render with now props after changing props
+    const newInstance = new newComponentClass(newProps);
+    newVnode._instance = newInstance;
 
-    newVnode._instance = oldInstance;   // Note: !!!problem here!  make a deep copy?
-    newTopNode._hostNode = oldInstance.Vnode._hostNode;
-    newVnode._instance.Vnode = newTopNode;
+    if (oldVnode._instance.componentWillReceiveProps) {
+        oldVnode._instance.componentWillReceiveProps();
+    }
 
-    // shouldComponentUpdate() need to check first
-    update(oldInstance.Vnode, newTopNode, oldInstance.parentElem);
+    newInstance.state = oldVnode._instance.state;
+    const newTopVnode = newInstance.render();
+    newVnode._instance.Vnode = newTopVnode;
+    newTopVnode._hostNode = oldVnode._instance.Vnode._hostNode;
+    update(oldVnode._instance.Vnode, newTopVnode, oldVnode._instance.parentElem);
+
 }
 
 function updateChildren(oldVnodeChildren, newVnodeChildren, parentElem) {
@@ -179,7 +188,6 @@ function updateChildren(oldVnodeChildren, newVnodeChildren, parentElem) {
                 updateText(oldVnodeChildren[i], newVnodeChildren[i], parentElem);
             }
             else{
-                console.log(oldVnodeChildren[i]);
                 update(oldVnodeChildren[i], newVnodeChildren[i], parentElem);
             }
         }

@@ -289,12 +289,25 @@ function updateComponent(instance, oldVnode, newVnode) {
 
 ----------------------------------2019-03-17--------commit key： 6eb43688159dce9b1319bf005b3c780849960174
 1. key的增删改写完了
-2. 发现了一个bug， updateText（）里不能直接innerHTML， innerHTML不止包含了text，还有与text兄弟的节点，一改chuildren没了
+2. 发现了一个bug， updateText（）里不能直接innerHTML， innerHTML不止包含了text，还有与text兄弟的节点，一改children没了
 比如：<div> 2222
         <span>aaaa</span>
     </div>
 我也需要Luy里的flattenChildren（）？？
 不然text与elem并列，且text在前的就出事了。
 
-----------------------------------2019-03-17--------commit key： 6eb43688159dce9b1319bf005b3c780849960174
+----------------------------------2019-03-17--------commit key： 4f34d9a5ed716aca823f707f38e4a0d4b5564181
 1. 暂时忽略细节，继续生命周期吧。
+2. 这是一个大更新，需要对比下package.json
+
+----------------------------------2019-03-18--------commit key: da472e38c37c333ac95f801d45a4308bef352ef6
+1. 看了下上个commit的改变，package.json就是加了unit test用的包而已
+2. 整理下代码，放进utils等文件。
+3. 有关事件触发和冒泡的先忽略（2fbda2a）
+4. 已经将从别处学习，实现了prop更新，但是再看看 09a0aada2a785b2f43e031e43682ded552bf23ec， 检查下自己的实现
+
+----------------------------------2019-03-24--------commit key: 09a0aada2a785b2f43e031e43682ded552bf23ec
+1. 处理children有问题，<button>{this.state.int}</button>不行，只能接受string，需要处理！
+2. 完成了一个issue:update component for props has problem #18
+3. 继续lifecycle functions： 2616b7185ec1b48e484593f2b71ecc42d3793b6f
+先理解了每个lifecycle func的用途，再实现，一个个来

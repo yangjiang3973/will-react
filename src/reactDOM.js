@@ -1,10 +1,10 @@
-import { isClass, isFunc, isEvent, isClassName} from './react-utils.js';
+import { isClass, isFunc, isEvent, isClassName, mapProps, ComponentLifecycle} from './react-utils.js';
 
 let mountIndex = 0;
 
 function render(Vnode, container, isUpdate) {  // NOTE: 2 kinds of Vnode
-    mountIndex++;
-    Vnode._mountIndex = mountIndex;
+    // mountIndex++;
+    // Vnode._mountIndex = mountIndex;
 
     if (!Vnode) return;
     let { type, props } = Vnode;
@@ -16,10 +16,16 @@ function render(Vnode, container, isUpdate) {  // NOTE: 2 kinds of Vnode
     let VnodeTop;
     if(VnodeType === 'function') {
         VnodeTop = renderComponent(Vnode, container);
+        if (Vnode._instance.componentWillMount) {
+            Vnode._instance.componentWillMount();
+        }
+
         type = VnodeTop.type;
         props = VnodeTop.props;
         children = props.children;
         domNode = document.createElement(type);
+        // call componentDidMount here?
+        // refactor this function to better call lifecycle func
         if(isUpdate) {
             container.removeChild(Vnode._hostNode);
         }
@@ -43,6 +49,13 @@ function render(Vnode, container, isUpdate) {  // NOTE: 2 kinds of Vnode
 
     container.appendChild(domNode);
 
+    if (VnodeType === 'function' && Vnode._instance.componentDidMount) {
+        Vnode._instance.lifecycle = ComponentLifecycle.MOUNTING;
+        Vnode._instance.componentDidMount();
+        Vnode._instance.componentDidMount = null; // in order to call only once??
+        Vnode._instance.lifecycle = ComponentLifecycle.MOUNT;
+    }
+
     // NOTE????
     return domNode;//注意这里我们加了一行代码，我们要将我们生成的真实节点返回出去，作为其他函数调用的时候的父亲节点
 }
@@ -55,27 +68,6 @@ function mountChildren(child, domNode) {
     }
 
     render(child, domNode);
-}
-
-
-function mapProps(domNode, props){
-    for (let propsName in props){
-        if (propsName === 'children')
-            continue;
-        else if (propsName === 'style') {
-            let style = props['style']
-            Object.keys(style).forEach((styleName) => {
-                domNode.style[styleName] = style[styleName];
-            });
-            continue
-        }
-        else if (isEvent(propsName)){
-            domNode.addEventListener(propsName.substring(2).toLowerCase(), props[propsName]);
-        }
-        else {
-            domNode[propsName] = props[propsName];
-        }
-    }
 }
 
 function renderComponent(VnodeWrapper, parentElem) {  //
