@@ -3,8 +3,8 @@ import { isClass, isFunc, isEvent, isClassName, mapProps, ComponentLifecycle} fr
 let mountIndex = 0;
 
 function render(Vnode, container, isUpdate) {  // NOTE: 2 kinds of Vnode
-    mountIndex++;
-    Vnode._mountIndex = mountIndex;
+    // mountIndex++;
+    // Vnode._mountIndex = mountIndex;
 
     if (!Vnode) return;
     let { type, props } = Vnode;
@@ -50,6 +50,7 @@ function render(Vnode, container, isUpdate) {  // NOTE: 2 kinds of Vnode
     container.appendChild(domNode);
 
     if (VnodeType === 'function' && Vnode._instance.componentDidMount) {
+        Vnode._instance.lifecycle = ComponentLifecycle.MOUNTING;
         Vnode._instance.componentDidMount();
         Vnode._instance.componentDidMount = null; // in order to call only once??
         Vnode._instance.lifecycle = ComponentLifecycle.MOUNT;

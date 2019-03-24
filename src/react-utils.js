@@ -19,7 +19,8 @@ const ComponentLifecycle = {
     CREATE: 0,
     MOUNT: 1,
     UPDATING: 2,
-    UPDATED: 3,
+    UPDATED:3,
+    MOUNTING: 4,
 }
 
 function isEvent(name) {

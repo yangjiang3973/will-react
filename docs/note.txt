@@ -289,7 +289,7 @@ function updateComponent(instance, oldVnode, newVnode) {
 
 ----------------------------------2019-03-17--------commit key： 6eb43688159dce9b1319bf005b3c780849960174
 1. key的增删改写完了
-2. 发现了一个bug， updateText（）里不能直接innerHTML， innerHTML不止包含了text，还有与text兄弟的节点，一改chuildren没了
+2. 发现了一个bug， updateText（）里不能直接innerHTML， innerHTML不止包含了text，还有与text兄弟的节点，一改children没了
 比如：<div> 2222
         <span>aaaa</span>
     </div>
@@ -304,4 +304,10 @@ function updateComponent(instance, oldVnode, newVnode) {
 1. 看了下上个commit的改变，package.json就是加了unit test用的包而已
 2. 整理下代码，放进utils等文件。
 3. 有关事件触发和冒泡的先忽略（2fbda2a）
-4.
+4. 已经将从别处学习，实现了prop更新，但是再看看 09a0aada2a785b2f43e031e43682ded552bf23ec， 检查下自己的实现
+
+----------------------------------2019-03-24--------commit key: 09a0aada2a785b2f43e031e43682ded552bf23ec
+1. 处理children有问题，<button>{this.state.int}</button>不行，只能接受string，需要处理！
+2. 完成了一个issue:update component for props has problem #18
+3. 继续lifecycle functions： 2616b7185ec1b48e484593f2b71ecc42d3793b6f
+先理解了每个lifecycle func的用途，再实现，一个个来
