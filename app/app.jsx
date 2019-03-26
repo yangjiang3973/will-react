@@ -309,6 +309,11 @@ export default class App extends React.Component {
     console.log('组件挂载')
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+      console.log('should upodate');
+      return true;
+  }
+
   handleClick = (e) => {
       this.setState({
           counter: this.state.counter === '2' ? 'a' : '2',

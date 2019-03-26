@@ -29,9 +29,17 @@ class Component {
             // before mounting
         }
         else {
+
             // updating stage
             const preState = this.state; // store old state
             this.nextState = {...this.state, ...partialState}; // store latest state
+            //NOTE: default return true?? how to do that
+            // 2 places, 1: here 2: updating children component
+            if(this.shouldComponentUpdate) {
+                let shouldUpdate = this.shouldComponentUpdate(this.props, this.nextState, this.context);
+                if(!shouldUpdate) return;
+            }
+
             this.state = this.nextState; //update state
             this.updateComponent();
         }
@@ -47,12 +55,14 @@ class Component {
     }
 
     // 8 lifecycle functions
-    shouldComponentUpdate(){}
+    shouldComponentUpdate(){}  // working now
     componentWillReceiveProps(){}
     componentWillUpdate(){}
     componentDidUpdate(){}
+
     componentWillMount(){}
     componentDidMount(){}
+
     componentWillUnmount(){}
     componentDidUnmount(){}
 
