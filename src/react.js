@@ -37,7 +37,7 @@ class Component {
             // 2 places, 1: here 2: updating children component
             if(this.shouldComponentUpdate) {
                 let shouldUpdate = this.shouldComponentUpdate(this.props, this.nextState, this.context);
-                if(!shouldUpdate) return;
+                if(shouldUpdate === false) return;
             }
 
             this.state = this.nextState; //update state
@@ -126,7 +126,15 @@ function updateComponentElement(oldVnode, newVnode) {
     newVnode._instance = newInstance;
 
     if (oldVnode._instance.componentWillReceiveProps) {
-        oldVnode._instance.componentWillReceiveProps();
+        oldVnode._instance.componentWillReceiveProps(newProps);
+    }
+
+    // NOTE: can it just return directly here?
+    if(this.shouldComponentUpdate) {
+        // not render but still update date
+        newInstance.state = oldVnode._instance.state;
+        let shouldUpdate = this.shouldComponentUpdate(newProps, oldVnode._instance.state);
+        if(shouldUpdate === false) return;
     }
 
     newInstance.state = oldVnode._instance.state;
